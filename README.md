@@ -23,6 +23,6 @@ The above is not a completed or comprehensive list, and it is not in a deliberat
 ## Practice
 The idea is to set up this learning environment in an overly complicated and unnecessarily overengineered blog format.
 
-## The rationale behind this is twofold:
+The rationale behind this is twofold:
   1. Apply the principles I can apply practically (sometimes at the expense of 'real need')
   2. Although I can use my learning in a practical manner here, I wish to write about it.
