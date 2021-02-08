@@ -12,5 +12,8 @@ RSpec.describe 'Visiting home', type: :feature do
     it 'should tell us the page title' do
       expect(page).to have_title('Learning Blog')
     end
+    it 'should have an explanation' do
+      expect(page).to have_selector('.page__content > p.text-block')
+    end
   end
 end

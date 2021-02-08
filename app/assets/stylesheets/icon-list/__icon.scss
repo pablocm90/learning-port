@@ -1,0 +1,14 @@
+@import 'colors';
+
+.icon-list__icon {
+  font-size: 2.5rem;
+  color: $accent;
+}
+
+.icon-list__icon--link-colour {
+  color: $link;
+}
+
+.icon-list__icon--primary {
+  color: $primary;
+}
