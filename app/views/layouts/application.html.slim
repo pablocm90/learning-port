@@ -11,5 +11,7 @@ html
   body
     = render 'shared/navbar'
     .page__container
+      p.notice = notice
+      p.alert = alert
       = yield
     = render 'shared/footer'
