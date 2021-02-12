@@ -1,11 +1,14 @@
 @import 'colors';
 
 .navbar {
-  height: 100px;
+  height: 7vh;
   background-color: $dark;
+  display: flex;
+  align-items: center;
 }
 
-  .navbar__links {
-    display: flex;
+  .navbar__logo {
+    color: $accent;
+    font-size: 3rem;
+    margin-left: 2rem;
   }
-  
