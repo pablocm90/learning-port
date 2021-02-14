@@ -1,10 +1,11 @@
 @import 'colors';
 
 .navbar {
-  height: 7vh;
+  height: 6rem;
   background-color: $dark;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
   .navbar__logo {
@@ -12,3 +13,54 @@
     font-size: 3rem;
     margin-left: 2rem;
   }
+
+  .navbar__links {
+    display: flex;
+    margin-right: 2rem;
+  }
+
+  .navbar__link {
+    font-family: 'Permanent Marker', cursive;
+    margin: 0 1rem;
+    font-size: 2rem;
+  }
+
+    .navbar__link--current {
+      text-decoration: underline .3rem;
+      &:hover {
+        color: $white !important;
+      }
+    }
+  
+  .navbar__pane-toggler {
+    display: none !important;
+  }
+
+  .navbar__mobile-link-pane {
+    background-color: $dark;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 6rem;
+  }
+  
+  .navbar__mobile-link-pane--active {
+    visibility: visible;
+    height: calc(100vh - 6rem);
+    width: 100vw;
+    transition: height 500ms, width 300ms;
+  }
+
+@media only screen and (max-width: 960px ) {
+  .navbar__links {
+    display: none;
+  }
+    
+  .navbar__pane-toggler {
+    margin-right: 2rem;
+    font-size: 3rem;
+    cursor: pointer;
+    display: inline-block !important;
+  }
+}

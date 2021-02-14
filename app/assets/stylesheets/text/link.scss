@@ -1,0 +1,12 @@
+@import 'colors';
+
+.link {
+  color: $link;
+  &:hover {
+    color: $accent;
+  }
+}
+
+  .link--white {
+    color: $white;
+  }
