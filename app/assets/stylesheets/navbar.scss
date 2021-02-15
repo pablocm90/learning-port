@@ -52,7 +52,7 @@
     transition: height 500ms, width 300ms;
   }
 
-@media only screen and (max-width: 960px ) {
+@media only screen and (max-device-width: 960px ) {
   .navbar__links {
     display: none;
   }
