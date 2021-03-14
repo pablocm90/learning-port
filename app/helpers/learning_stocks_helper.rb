@@ -1,0 +1,2 @@
+module LearningStocksHelper
+end
