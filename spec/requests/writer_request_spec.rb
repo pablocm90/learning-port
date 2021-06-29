@@ -3,4 +3,5 @@
 require 'rails_helper'
 
 RSpec.describe 'Writers', type: :request do
+  # pending
 end

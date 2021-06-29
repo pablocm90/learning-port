@@ -1,1 +1,6 @@
-turbo-frame id="new_learning_stock" src="#{new_writer_learning_stock_path(current_writer)}"
+.md:w-11/12.sm:w-11/12.flex
+  = turbo_frame_tag "learning_stock_form", src: new_writer_learning_stock_path(current_writer)
+  = turbo_stream_from "edit_learning_stocks"
+  = turbo_frame_tag 'edit_learning_stocks' do
+    .flex.flex-wrap.justify-around
+      = render partial: 'learning_stocks/editable_learning_stock', collection: @learning_stocks.order(id: :desc), as: :learning_stock

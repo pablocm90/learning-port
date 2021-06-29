@@ -31,3 +31,15 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      learning_stock:
+        level_of_competence_list:
+          not: None
+          litle: I don't know what I don't know
+          some: Starting to dable with it
+          dangerous: Enough to be dangerous
+          enough: I know what I don't know
+          competent: I know where to find the information
+          good: Comfortable
+          everyday: I use it every day

@@ -1,35 +1,26 @@
-.navbar
-  i.navbar__logo.fas.fa-blog
-  .navbar__links
-    = link_to_unless_current 'Home', root_path, class: 'link link--white navbar__link' do 
-        p.link.link--white.navbar__link.navbar__link--current Home
+.h-12.bg-brown.flex.items-center.justify-between
+  i.text-yellow.font.text-2xl.ml-8.fas.fa-blog
+  .mr-8.hidden.lg:flex
+    = link_to_unless_current 'Home', root_path, class: 'text-white hover:text-yellow link--white font-marker mx-4 text-2xl' do 
+        p.text-white.hover:text-yellow.link--white.font-marker.mx-4.text-2xl.underline.hover:text-white Home
     - if current_writer
-      = link_to_unless_current 'Sign out', destroy_writer_session_path, class: 'link link--white navbar__link', method: :delete do 
-        p.link.link--white.navbar__link.navbar__link--current Sign out
-      = link_to_unless_current 'Dashboard', dashboard_writer_path(current_writer), class: 'link link--white navbar__link', method: :delete do 
-        p.link.link--white.navbar__link.navbar__link--current Sign out
+      = link_to_unless_current 'Sign out', destroy_writer_session_path, class: 'text-white hover:text-yellow link--white font-marker mx-4 text-2xl', method: :delete do 
+        p.text-white.hover:text-yellow.link--white.font-marker.mx-4.text-2xl.underline.hover:text-white Sign out
+      = link_to_unless_current 'Dashboard', dashboard_writer_path(current_writer), class: 'text-white hover:text-yellow link--white font-marker mx-4 text-2xl' do 
+        p.text-white.hover:text-yellow.link--white.font-marker.mx-4.text-2xl.underline.hover:text-white Dashboard
     -else
-      = link_to_unless_current 'Sign in', new_writer_session_path, class: 'link link--white navbar__link' do 
-        p.link.link--white.navbar__link.navbar__link--current Sign in
-  .navbar__pane-toggler.link.link--white.fas.fa-hamburger#navbar__pane-toggler
+      = link_to_unless_current 'Sign in', new_writer_session_path, class: 'text-white hover:text-yellow link--white font-marker mx-4 text-2xl' do 
+        p.text-white.hover:text-yellow.link--white.font-marker.mx-4.text-2xl.underline.hover:text-white Sign in
+  .lg:hidden
+    .mr-8.text-2xl.text-white.hover:text-yellow.link--white.fas.fa-hamburger
 .navbar__mobile-link-pane#mobile-link-pane
-  = link_to_unless_current 'Home', root_path, class: 'link link--white navbar__link' do 
-      p.link.link--white.navbar__link.navbar__link--current Home
+  = link_to_unless_current 'Home', root_path, class: 'text-white hover:text-yellow link--white font-marker mx-4 text-2xl' do 
+      p.text-white.hover:text-yellow.link--white.font-marker.mx-4.text-2xl.underline.hover:text-white Home
   - if current_writer
-    = link_to_unless_current 'Sign out', destroy_writer_session_path, class: 'link link--white navbar__link', method: :delete do 
-      p.link.link--white.navbar__link.navbar__link--current Sign out
-    = link_to_unless_current 'Dashboard', dashboard_writer_path(current_writer), class: 'link link--white navbar__link', method: :delete do 
-      p.link.link--white.navbar__link.navbar__link--current Sign out
+    = link_to_unless_current 'Sign out', destroy_writer_session_path, class: 'text-white hover:text-yellow link--white font-marker mx-4 text-2xl', method: :delete do 
+      p.text-white.hover:text-yellow.link--white.font-marker.mx-4.text-2xl.underline.hover:text-white Sign out
+    = link_to_unless_current 'Dashboard', dashboard_writer_path(current_writer), class: 'text-white hover:text-yellow link--white font-marker mx-4 text-2xl', method: :delete do 
+      p.text-white.hover:text-yellow.link--white.font-marker.mx-4.text-2xl.underline.hover:text-white Sig  out
   -else
-    = link_to_unless_current 'Sign in', new_writer_session_path, class: 'link link--white navbar__link' do 
-      p.link.link--white.navbar__link.navbar__link--current Sign in
-
-javascript: 
-  document.getElementById('navbar__pane-toggler').addEventListener('click', e => toggleBurger(e.target))
-
-  function toggleBurger(element) {
-    ['fas', 'fa-hamburger', 'far', 'fa-times-circle'].forEach((togledClass) => {
-      element.classList.toggle(togledClass)
-    })
-    document.getElementById('mobile-link-pane').classList.toggle('navbar__mobile-link-pane--active')
-  }
+    = link_to_unless_current 'Sign in', new_writer_session_path, class: 'text-white hover:text-yellow link--white font-marker mx-4.text-2xl' do 
+      p.text-white.hover:text-yellow.link--white.font-marker.mx-4.text-2xl.underline.hover:text-white Sign in

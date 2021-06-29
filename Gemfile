@@ -31,6 +31,7 @@ gem 'slim-rails'
 
 # AUTHENTICATION
 gem 'devise'
+gem 'translate_enum'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -49,6 +50,8 @@ group :development do
   gem 'listen', '~> 3.2'
   gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'better_errors'
+  gem 'binding_of_caller'
   gem 'guard'
   gem 'guard-rails', '~> 0.8.1'
   gem 'guard-rspec', '~> 4.7', '>= 4.7.3'

@@ -1,12 +1,2 @@
-turbo-frame id="new_learning_stock"
-  = form_for [@writer, @learning_stock] do |f|
-    = label(:learning_stock, :name)
-    = f.text_field :name
-    = label(:learning_stock, :icon)
-    = f.text_field :icon
-    = label(:learning_stock, :desired_weight)
-    = f.select :desired_weight,  options_for_select(["High", "Medium", "Low", "Marginal"]) 
-    = label(:learning_stock, :time_spent)
-    = f.number_field :time_spent
-    = label(:learning_stock, :time_spent)
-    = f.select :magnitude, options_for_select(["hours", "days", "months", "years"]) 
+= turbo_frame_tag "learning_stock_form" do
+  = render "form", writer: @writer, learning_stock: @learning_stock

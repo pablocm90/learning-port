@@ -1,37 +1,5 @@
 @import 'colors';
 
-.navbar {
-  height: 6rem;
-  background-color: $dark;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-  .navbar__logo {
-    color: $accent;
-    font-size: 3rem;
-    margin-left: 2rem;
-  }
-
-  .navbar__links {
-    display: flex;
-    margin-right: 2rem;
-  }
-
-  .navbar__link {
-    font-family: 'Permanent Marker', cursive;
-    margin: 0 1rem;
-    font-size: 2rem;
-  }
-
-    .navbar__link--current {
-      text-decoration: underline .3rem;
-      &:hover {
-        color: $white !important;
-      }
-    }
-  
   .navbar__pane-toggler {
     display: none !important;
   }

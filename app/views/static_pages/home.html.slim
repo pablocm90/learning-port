@@ -1,23 +1,23 @@
 h1.text-black.text-4xl.font-title.text-center.my-8.font-bold Welcome to Pablo's learning blog
 
 .page__content
-  .titled-paragraph
+  div
     h2.text-black.font-title.text-2xl.my-4.font-semibold Why such hubris? 
-    p.text-base.text-black-light.mx-2
+    p.text-base.text-black-light.my-2
       | This is mainly for myself, my musings, my experimentations, you dear visitor can think of it as a logbook of my path as a code apprentice. 
-    p.text-base.text-black-light.mx-2
+    p.text-base.text-black-light.my-2
       | If you want to follow along, you are more than welcomed to do so. 
-    p.text-base.text-black-light.mx-2
+    p.text-base.text-black-light.my-2
       | At this point of time, this is just the barebones skeleton of a blog, but there are future plans.
-  .titled-paragraph 
+  div
     h2.text-black.font-title.text-2xl.my-4.font-semibold Current overhanging idea
-    p.text-base.text-black-light.mx-2
+    p.text-base.text-black-light.my-2
       | As of now what I must learn is to develop content using TDD.
-    p.text-base.text-black-light.mx-2
+    p.text-base.text-black-light.my-2
       | To do so, this blog is being written with TDD. 
-    p.text-base.text-black-light.mx-2
+    p.text-base.text-black-light.my-2
       | The learnings where I struggle most to find ressources or that I find particularly interesting will be documented in it.
-  .titled-paragraph
+  div
     h2.text-black.font-title.text-2xl.my-4.font-semibold Concrete short-term plans
     .w-10/12.items-center.flex.flex-center.mx-auto
       i.fas.fa-vial.text-xl.text-yellow
@@ -28,7 +28,7 @@ h1.text-black.text-4xl.font-title.text-center.my-8.font-bold Welcome to Pablo's 
     .w-10/12.items-center.flex.flex-center.mx-auto
       i.fas.fa-chart-pie.text-xl.text-yellow
       p.icon-list__text Add a nice interface to my 'Knowledge Porfolio'
-  .titled-paragraph 
+  div
     h2.text-black.font-title.text-2xl.my-4.font-semibold Difuse long term plans
     .w-10/12.items-center.flex.flex-center.mx-auto
       i.fas.fa-palette.text-xl.text-blue
@@ -39,7 +39,7 @@ h1.text-black.text-4xl.font-title.text-center.my-8.font-bold Welcome to Pablo's 
     .w-10/12.items-center.flex.flex-center.mx-auto
       i.fas.fa-gamepad.text-xl.text-blue
       p.icon-list__text Make a game
-  .titled-paragraph 
+  div
     h2.text-black.font-title.text-2xl.my-4.font-semibold Continuous goals
     .w-10/12.items-center.flex.flex-center.mx-auto
       i.fas.fa-code.text-xl.text-brown
@@ -50,5 +50,11 @@ h1.text-black.text-4xl.font-title.text-center.my-8.font-bold Welcome to Pablo's 
     .w-10/12.items-center.flex.flex-center.mx-auto
       i.fas.fa-paragraph.text-xl.text-brown
       p.icon-list__text Improve written communication skills
+  div
+    h2.text-black.font-title.text-2xl.my-4.font-semibold Learning Portfolio
+    = turbo_stream_from "learning_stocks"
+    = turbo_frame_tag 'learning_stocks' do
+      .flex.flex-wrap.justify-around
+        = render @learning_stocks.order(id: :desc)
 
     

@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     fontFamily: {
       title: 'Sora, sans-serif',
+      marker: 'Permanent Marker, cursive'
     },
     colors: {
       transparent: 'transparent',
@@ -23,6 +24,7 @@ module.exports = {
         DEFAULT: "#759AAB"
       },
       white: {
+        light: "#FFF",
         DEFAULT: "#f6f3f3"
       }
     },
