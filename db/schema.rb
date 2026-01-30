@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_30_132130) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_30_132326) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_30_132130) do
     t.string "source", default: "admin"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "podcast_episodes", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "episode_number"
+    t.date "published_at"
+    t.text "embed_code"
+    t.jsonb "external_links", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["episode_number"], name: "index_podcast_episodes_on_episode_number", unique: true
   end
 
   create_table "writers", force: :cascade do |t|
