@@ -1,25 +1,8 @@
-Metrics/BlockLength:
-  Exclude:
-    - 'Rakefile'
-    - '**/*.rake'
-    - 'spec/**/*.rb'
-    - db/*
-    - config/*
-    
-Layout/LineLength:
-  Exclude:
-    - 'lib/tasks/import_nacebel_codes.rake'
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
-AllCops:
-  NewCops: enable
-  Exclude:
-    - db/**/*
-    - config/**/*
-    - node_modules/**/*
-    - config.ru
-    - bin/*
-    - Guardfile
-
-Metrics/MethodLength:
-  Max: 15
-  CountAsOne: ['array', 'hash']
+# Overwrite or add rules to create your own house style
+#
+# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
+# Layout/SpaceInsideArrayLiteralBrackets:
+#   Enabled: false

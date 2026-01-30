@@ -1,17 +1,14 @@
-# frozen_string_literal: true
-
 Rails.application.routes.draw do
-  devise_for :writers
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  root to: 'static_pages#home'
+  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
+  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  get "up" => "rails/health#show", as: :rails_health_check
 
-  resources :writers, only: [] do
-    member do 
-      get :dashboard
-    end
-    resources :learning_stocks, only: [:new, :create, :update, :edit]
-  end
+  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
+  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  
+  # Defines the root path route ("/")
+  # root "posts#index"
 end
