@@ -1,0 +1,40 @@
+<nav class="bg-surface border-b border-muted/20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <%= link_to root_path, class: "text-xl font-semibold text-text hover:text-primary transition" do %>
+          Pablo CM
+        <% end %>
+      </div>
+
+      <div class="hidden md:flex items-center space-x-8">
+        <%= link_to "Learning", "#", class: nav_link_class("#") %>
+        <%= link_to "Podcast", "#", class: nav_link_class("#") %>
+        <%= link_to "Blog", "https://blog.example.com", class: "text-muted hover:text-text transition", target: "_blank" %>
+
+        <% if writer_signed_in? %>
+          <%= link_to "Dashboard", "#", class: nav_link_class("#") %>
+          <%= button_to "Sign out", destroy_writer_session_path, method: :delete, class: "text-muted hover:text-text transition" %>
+        <% end %>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="md:hidden flex items-center">
+        <button type="button" data-controller="mobile-menu" data-action="click->mobile-menu#toggle" class="text-muted hover:text-text">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="md:hidden hidden" data-mobile-menu-target="menu">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <%= link_to "Learning", "#", class: "block px-3 py-2 text-muted hover:text-text" %>
+      <%= link_to "Podcast", "#", class: "block px-3 py-2 text-muted hover:text-text" %>
+      <%= link_to "Blog", "https://blog.example.com", class: "block px-3 py-2 text-muted hover:text-text", target: "_blank" %>
+    </div>
+  </div>
+</nav>
