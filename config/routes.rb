@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   devise_for :writers, skip: [:registrations]
 
+  namespace :admin do
+    get "/", to: "dashboard#index", as: :dashboard
+  end
+
   root "pages#home"
 
   get "learning", to: "learning_items#index", as: :learning_portfolio
