@@ -1,0 +1,72 @@
+<!-- Hero Section -->
+<section class="py-20 md:py-32">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+      Hi, I'm <span class="text-primary">Pablo</span>
+    </h1>
+    <p class="text-xl md:text-2xl text-muted max-w-2xl">
+      Software developer and lifelong learner. I build things, share what I learn, and occasionally talk about it on my podcast.
+    </p>
+  </div>
+</section>
+
+<!-- Currently Learning Section -->
+<section class="py-16 bg-surface">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-semibold">Currently Learning</h2>
+      <%= link_to "See all ->", learning_portfolio_path, class: "text-primary hover:text-primary/80 transition" %>
+    </div>
+
+    <% if @learning_highlights.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <% @learning_highlights.each do |item| %>
+          <!-- Card partial will be created in Task 12 -->
+          <div class="bg-background rounded-lg p-4 border border-muted/20">
+            <span class="text-2xl"><%= item.icon %></span>
+            <h3 class="font-medium"><%= item.name %></h3>
+            <p class="text-sm text-muted"><%= item.category %></p>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-muted">No learning items yet.</p>
+    <% end %>
+  </div>
+</section>
+
+<!-- Latest Podcast Episode -->
+<section class="py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-semibold">Latest Episode</h2>
+      <%= link_to "All episodes ->", podcast_path, class: "text-primary hover:text-primary/80 transition" %>
+    </div>
+
+    <% if @latest_episode %>
+      <!-- Episode partial will be created in Task 13 -->
+      <div class="bg-surface rounded-lg p-6 border border-muted/20">
+        <span class="text-sm text-muted">Episode <%= @latest_episode.episode_number %></span>
+        <h3 class="text-xl font-semibold mt-1"><%= @latest_episode.title %></h3>
+        <p class="text-muted mt-2"><%= @latest_episode.description %></p>
+      </div>
+    <% else %>
+      <p class="text-muted">No episodes yet.</p>
+    <% end %>
+  </div>
+</section>
+
+<!-- Latest Blog Post (RSS) - placeholder for now -->
+<section class="py-16 bg-surface">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-semibold">Latest from the Blog</h2>
+      <%= link_to "Read more ->", "https://blog.example.com", class: "text-primary hover:text-primary/80 transition", target: "_blank" %>
+    </div>
+
+    <!-- Turbo frame for blog post will be added in Task 16 -->
+    <div class="bg-background rounded-lg p-6 border border-muted/20">
+      <p class="text-muted">Blog integration coming soon.</p>
+    </div>
+  </div>
+</section>

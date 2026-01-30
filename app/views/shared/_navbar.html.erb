@@ -8,8 +8,8 @@
       </div>
 
       <div class="hidden md:flex items-center space-x-8">
-        <%= link_to "Learning", "#", class: nav_link_class("#") %>
-        <%= link_to "Podcast", "#", class: nav_link_class("#") %>
+        <%= link_to "Learning", learning_portfolio_path, class: nav_link_class(learning_portfolio_path) %>
+        <%= link_to "Podcast", podcast_path, class: nav_link_class(podcast_path) %>
         <%= link_to "Blog", "https://blog.example.com", class: "text-muted hover:text-text transition", target: "_blank" %>
 
         <% if writer_signed_in? %>
@@ -32,8 +32,8 @@
   <!-- Mobile menu -->
   <div class="md:hidden hidden" data-mobile-menu-target="menu">
     <div class="px-2 pt-2 pb-3 space-y-1">
-      <%= link_to "Learning", "#", class: "block px-3 py-2 text-muted hover:text-text" %>
-      <%= link_to "Podcast", "#", class: "block px-3 py-2 text-muted hover:text-text" %>
+      <%= link_to "Learning", learning_portfolio_path, class: "block px-3 py-2 text-muted hover:text-text" %>
+      <%= link_to "Podcast", podcast_path, class: "block px-3 py-2 text-muted hover:text-text" %>
       <%= link_to "Blog", "https://blog.example.com", class: "block px-3 py-2 text-muted hover:text-text", target: "_blank" %>
     </div>
   </div>
