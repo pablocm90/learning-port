@@ -38,8 +38,7 @@
   <div>
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-semibold text-text">Podcast Episodes</h2>
-      <%# TODO: Update to new_admin_podcast_episode_path after Task 19 %>
-      <%= link_to "New Episode", "#", class: "bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition" %>
+      <%= link_to "New Episode", new_admin_podcast_episode_path, class: "bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition" %>
     </div>
 
     <div class="bg-surface border border-muted/20 rounded-lg overflow-hidden">
@@ -59,8 +58,7 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-text"><%= episode.title %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-muted"><%= episode.published_at&.strftime("%b %d, %Y") %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <%# TODO: Update to edit_admin_podcast_episode_path(episode) after Task 19 %>
-                <%= link_to "Edit", "#", class: "text-primary hover:text-primary/80" %>
+                  <%= link_to "Edit", edit_admin_podcast_episode_path(episode), class: "text-primary hover:text-primary/80" %>
               </td>
             </tr>
           <% end %>

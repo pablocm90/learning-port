@@ -1,0 +1,44 @@
+<%= form_with(model: [:admin, podcast_episode], class: "space-y-6") do |form| %>
+  <% if podcast_episode.errors.any? %>
+    <div class="bg-red-500/10 border border-red-500/50 rounded-lg p-4 mb-6">
+      <h2 class="text-red-400 font-semibold mb-2"><%= pluralize(podcast_episode.errors.count, "error") %> prohibited this podcast episode from being saved:</h2>
+      <ul class="list-disc list-inside text-red-400 text-sm">
+        <% podcast_episode.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, class: "block text-sm font-medium text-muted mb-1" %>
+    <%= form.text_field :title, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none", required: true %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :episode_number, class: "block text-sm font-medium text-muted mb-1" %>
+      <%= form.number_field :episode_number, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none", required: true, min: 1 %>
+    </div>
+
+    <div>
+      <%= form.label :published_at, class: "block text-sm font-medium text-muted mb-1" %>
+      <%= form.date_field :published_at, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-muted mb-1" %>
+    <%= form.text_area :description, rows: 4, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-y" %>
+  </div>
+
+  <div>
+    <%= form.label :embed_code, class: "block text-sm font-medium text-muted mb-1" %>
+    <%= form.text_area :embed_code, rows: 4, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-y", placeholder: '<iframe src="https://open.spotify.com/embed/episode/..."></iframe>' %>
+  </div>
+
+  <div class="flex items-center gap-4 pt-4">
+    <%= form.submit class: "bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition cursor-pointer" %>
+    <%= link_to "Cancel", admin_dashboard_path, class: "text-muted hover:text-text transition" %>
+  </div>
+<% end %>
