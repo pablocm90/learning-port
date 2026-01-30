@@ -1,42 +1,65 @@
-require 'rss'
-require 'open-uri'
+require 'net/http'
+require 'json'
 
 class BlogFeedService
-  FEED_URL = ENV.fetch('BLOG_RSS_URL', 'https://blog.example.com/feed.xml')
+  HASHNODE_API = 'https://gql.hashnode.com'
+  BLOG_HOST = ENV.fetch('BLOG_URL', 'https://blog.example.com').gsub(%r{^https?://}, '')
   CACHE_KEY = 'latest_blog_post'
   CACHE_DURATION = 15.minutes
 
   def self.fetch_latest
     Rails.cache.fetch(CACHE_KEY, expires_in: CACHE_DURATION) do
-      fetch_from_feed
+      fetch_from_hashnode
     end
   end
 
-  def self.fetch_from_feed
-    content = URI.open(FEED_URL,
-      read_timeout: 5,
-      "User-Agent" => "Mozilla/5.0 (compatible; AboutMeSite/1.0)"
-    ).read
-    feed = RSS::Parser.parse(content, false)
+  def self.fetch_from_hashnode
+    uri = URI(HASHNODE_API)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.read_timeout = 5
 
-    return nil unless feed&.items&.any?
+    request = Net::HTTP::Post.new(uri.path.empty? ? '/' : uri.path)
+    request['Content-Type'] = 'application/json'
+    request.body = {
+      query: <<~GRAPHQL
+        query {
+          publication(host: "#{BLOG_HOST}") {
+            posts(first: 1) {
+              edges {
+                node {
+                  title
+                  url
+                  brief
+                  publishedAt
+                }
+              }
+            }
+          }
+        }
+      GRAPHQL
+    }.to_json
 
-    item = feed.items.first
+    response = http.request(request)
+    return nil unless response.is_a?(Net::HTTPSuccess)
+
+    data = JSON.parse(response.body)
+    post = data.dig('data', 'publication', 'posts', 'edges', 0, 'node')
+    return nil unless post
+
     {
-      title: item.title,
-      url: item.link,
-      description: truncate_html(item.description),
-      published_at: item.pubDate
+      title: post['title'],
+      url: post['url'],
+      description: truncate_text(post['brief']),
+      published_at: Time.parse(post['publishedAt'])
     }
-  rescue OpenURI::HTTPError, SocketError, RSS::Error, Timeout::Error => e
-    Rails.logger.warn "Failed to fetch blog feed: #{e.message}"
+  rescue StandardError => e
+    Rails.logger.warn "Failed to fetch blog from Hashnode: #{e.message}"
     nil
   end
 
-  def self.truncate_html(html, length: 200)
-    return nil if html.nil?
-
-    text = ActionController::Base.helpers.strip_tags(html)
+  def self.truncate_text(text, length: 200)
+    return nil if text.nil?
     ActionController::Base.helpers.truncate(text, length: length)
   end
 end
