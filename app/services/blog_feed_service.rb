@@ -13,7 +13,10 @@ class BlogFeedService
   end
 
   def self.fetch_from_feed
-    content = URI.open(FEED_URL, read_timeout: 5).read
+    content = URI.open(FEED_URL,
+      read_timeout: 5,
+      "User-Agent" => "Mozilla/5.0 (compatible; AboutMeSite/1.0)"
+    ).read
     feed = RSS::Parser.parse(content, false)
 
     return nil unless feed&.items&.any?
