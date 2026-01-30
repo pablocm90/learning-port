@@ -1,0 +1,12 @@
+{
+  "name": "about-me",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:pablocm90/learning-port.git",
+  "author": "Pablo <pablocm90@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.19"
+  }
+}
