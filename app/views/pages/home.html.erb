@@ -39,12 +39,7 @@
     </div>
 
     <% if @latest_episode %>
-      <!-- Episode partial will be created in Task 13 -->
-      <div class="bg-surface rounded-lg p-6 border border-muted/20">
-        <span class="text-sm text-muted">Episode <%= @latest_episode.episode_number %></span>
-        <h3 class="text-xl font-semibold mt-1"><%= @latest_episode.title %></h3>
-        <p class="text-muted mt-2"><%= @latest_episode.description %></p>
-      </div>
+      <%= render "podcast_episodes/featured", episode: @latest_episode %>
     <% else %>
       <p class="text-muted">No episodes yet.</p>
     <% end %>
