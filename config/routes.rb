@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get "/", to: "dashboard#index", as: :dashboard
+    resources :learning_items, except: [:index, :show]
+    resources :podcast_episodes, except: [:index, :show]
   end
 
   root "pages#home"

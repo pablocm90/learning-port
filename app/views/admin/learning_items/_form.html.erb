@@ -1,0 +1,67 @@
+<%= form_with(model: [:admin, learning_item], class: "space-y-6") do |form| %>
+  <% if learning_item.errors.any? %>
+    <div class="bg-red-500/10 border border-red-500/50 rounded-lg p-4 mb-6">
+      <h2 class="text-red-400 font-semibold mb-2"><%= pluralize(learning_item.errors.count, "error") %> prohibited this learning item from being saved:</h2>
+      <ul class="list-disc list-inside text-red-400 text-sm">
+        <% learning_item.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :name, class: "block text-sm font-medium text-muted mb-1" %>
+      <%= form.text_field :name, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none", required: true %>
+    </div>
+
+    <div>
+      <%= form.label :icon, class: "block text-sm font-medium text-muted mb-1" %>
+      <%= form.text_field :icon, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none", placeholder: "e.g. emoji or icon code" %>
+    </div>
+
+    <div>
+      <%= form.label :category, class: "block text-sm font-medium text-muted mb-1" %>
+      <%= form.text_field :category, list: "category-suggestions", class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none", required: true %>
+      <datalist id="category-suggestions">
+        <option value="Languages">
+        <option value="Frameworks">
+        <option value="DevOps">
+        <option value="Concepts">
+        <option value="Databases">
+        <option value="Tools">
+      </datalist>
+    </div>
+
+    <div>
+      <%= form.label :status, class: "block text-sm font-medium text-muted mb-1" %>
+      <%= form.select :status, LearningItem.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none", required: true %>
+    </div>
+
+    <div>
+      <%= form.label :started_at, class: "block text-sm font-medium text-muted mb-1" %>
+      <%= form.date_field :started_at, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none" %>
+    </div>
+
+    <div>
+      <%= form.label :position, class: "block text-sm font-medium text-muted mb-1" %>
+      <%= form.number_field :position, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none", min: 0 %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-muted mb-1" %>
+    <%= form.text_area :description, rows: 3, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-y" %>
+  </div>
+
+  <div>
+    <%= form.label :notes, class: "block text-sm font-medium text-muted mb-1" %>
+    <%= form.text_area :notes, rows: 4, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-y", placeholder: "Private notes (markdown supported)" %>
+  </div>
+
+  <div class="flex items-center gap-4 pt-4">
+    <%= form.submit class: "bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition cursor-pointer" %>
+    <%= link_to "Cancel", admin_dashboard_path, class: "text-muted hover:text-text transition" %>
+  </div>
+<% end %>

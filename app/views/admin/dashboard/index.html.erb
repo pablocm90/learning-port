@@ -5,8 +5,7 @@
   <div class="mb-12">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-semibold text-text">Learning Items</h2>
-      <%# TODO: Update to new_admin_learning_item_path after Task 18 %>
-      <%= link_to "New Item", "#", class: "bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition" %>
+      <%= link_to "New Item", new_admin_learning_item_path, class: "bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition" %>
     </div>
 
     <div class="bg-surface border border-muted/20 rounded-lg overflow-hidden">
@@ -26,8 +25,7 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-muted"><%= item.category %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-muted"><%= item.status %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <%# TODO: Update to edit_admin_learning_item_path(item) after Task 18 %>
-                <%= link_to "Edit", "#", class: "text-primary hover:text-primary/80" %>
+                <%= link_to "Edit", edit_admin_learning_item_path(item), class: "text-primary hover:text-primary/80" %>
               </td>
             </tr>
           <% end %>
