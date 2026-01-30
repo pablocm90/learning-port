@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   get "learning", to: "learning_items#index", as: :learning_portfolio
   resources :learning_items, only: [:show]
   get "podcast", to: "podcast_episodes#index", as: :podcast
+  get "blog/latest", to: "blog_posts#latest", as: :latest_blog_post
 end

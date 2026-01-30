@@ -54,9 +54,8 @@
       <%= link_to "Read more ->", "https://blog.example.com", class: "text-primary hover:text-primary/80 transition", target: "_blank" %>
     </div>
 
-    <!-- Turbo frame for blog post will be added in Task 16 -->
-    <div class="bg-background rounded-lg p-6 border border-muted/20">
-      <p class="text-muted">Blog integration coming soon.</p>
-    </div>
+    <%= turbo_frame_tag "latest_blog_post", src: latest_blog_post_path, loading: :lazy do %>
+      <div class="animate-pulse bg-background rounded-lg h-32"></div>
+    <% end %>
   </div>
 </section>
