@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_30_131823) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_30_132130) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "learning_items", force: :cascade do |t|
+    t.string "name"
+    t.string "icon"
+    t.string "category"
+    t.integer "status"
+    t.text "description"
+    t.date "started_at"
+    t.jsonb "resources", default: []
+    t.text "notes"
+    t.jsonb "projects", default: []
+    t.integer "position", default: 0
+    t.string "source", default: "admin"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "writers", force: :cascade do |t|
     t.string "email", default: "", null: false
