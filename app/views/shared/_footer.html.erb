@@ -1,11 +1,7 @@
 <footer class="bg-surface border-t border-muted/20 mt-auto">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex flex-col md:flex-row justify-between items-center">
-      <div class="text-muted text-sm">
-        &copy; <%= Date.current.year %> Pablo CM. All rights reserved.
-      </div>
-
-      <div class="flex items-center space-x-6 mt-4 md:mt-0">
+    <div class="flex justify-center">
+      <div class="flex items-center space-x-6">
         <%= link_to "mailto:#{ENV.fetch('CONTACT_EMAIL', 'contact@example.com')}", class: "text-muted hover:text-primary transition" do %>
           <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
