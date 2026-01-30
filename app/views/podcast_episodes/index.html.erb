@@ -1,0 +1,16 @@
+<div class="py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-bold mb-2">Podcast</h1>
+    <p class="text-muted mb-12">Conversations about software, learning, and building things.</p>
+
+    <% if @episodes.any? %>
+      <div class="space-y-6">
+        <% @episodes.each do |episode| %>
+          <%= render "podcast_episodes/episode", episode: episode %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-muted">No episodes yet. Check back soon!</p>
+    <% end %>
+  </div>
+</div>
