@@ -4,19 +4,41 @@
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
-/* Custom theme configuration for dark mode about-me site */
+/* Custom theme - using CSS variables for light/dark mode */
 @theme {
-  /* Custom colors */
-  --color-background: #0f172a;
-  --color-surface: #1e293b;
-  --color-primary: #3b82f6;
-  --color-secondary: #10b981;
-  --color-text: #f1f5f9;
-  --color-muted: #94a3b8;
+  /* Colors reference CSS variables set below */
+  --color-background: var(--bg);
+  --color-surface: var(--surface);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
 
   /* Custom fonts */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Light mode (default) */
+:root {
+  --bg: #faf9f6;
+  --surface: #f0ede5;
+  --primary: #fe5f00;
+  --secondary: #988f2a;
+  --text: #23231a;
+  --muted: #6a5837;
+}
+
+/* Dark mode (system preference) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #23231a;
+    --surface: #322f20;
+    --primary: #fe5f00;
+    --secondary: #b8ad3a;
+    --text: #faf9f6;
+    --muted: #a89a78;
+  }
 }
 
 /* Base styles */
