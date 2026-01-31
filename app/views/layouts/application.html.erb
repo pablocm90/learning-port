@@ -4,8 +4,11 @@
     <script>
       (function() {
         const stored = localStorage.getItem('theme');
-        if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (stored === 'dark' || (!stored && prefersDark)) {
           document.documentElement.classList.add('dark');
+        } else if (stored === 'light' || (!stored && !prefersDark)) {
+          document.documentElement.classList.add('light');
         }
       })();
     </script>
