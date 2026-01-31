@@ -4,56 +4,69 @@
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
-/* Custom theme - using CSS variables for light/dark mode */
-@theme {
-  /* Colors reference CSS variables set below */
-  --color-background: var(--bg);
-  --color-surface: var(--surface);
-  --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --color-text: var(--text);
-  --color-muted: var(--muted);
+/* Define CSS custom properties for theming */
+:root {
+  --color-background: #faf9f6;
+  --color-surface: #f0ede5;
+  --color-primary: #fe5f00;
+  --color-secondary: #988f2a;
+  --color-text: #23231a;
+  --color-muted: #6a5837;
+}
 
-  /* Custom fonts */
+/* Dark mode via manual toggle */
+:root.dark {
+  --color-background: #23231a;
+  --color-surface: #322f20;
+  --color-primary: #fe5f00;
+  --color-secondary: #b8ad3a;
+  --color-text: #faf9f6;
+  --color-muted: #a89a78;
+}
+
+/* Dark mode via system preference (no manual override) */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-background: #23231a;
+    --color-surface: #322f20;
+    --color-primary: #fe5f00;
+    --color-secondary: #b8ad3a;
+    --color-text: #faf9f6;
+    --color-muted: #a89a78;
+  }
+}
+
+/* Custom theme tokens - reference CSS variables */
+@theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-/* Light mode (default) */
-:root {
-  --bg: #faf9f6;
-  --surface: #f0ede5;
-  --primary: #fe5f00;
-  --secondary: #988f2a;
-  --text: #23231a;
-  --muted: #6a5837;
-}
-
-/* Dark mode via class (manual toggle) */
-:root.dark {
-  --bg: #23231a;
-  --surface: #322f20;
-  --primary: #fe5f00;
-  --secondary: #b8ad3a;
-  --text: #faf9f6;
-  --muted: #a89a78;
-}
-
-/* Dark mode via system preference (when no manual override) */
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --bg: #23231a;
-    --surface: #322f20;
-    --primary: #fe5f00;
-    --secondary: #b8ad3a;
-    --text: #faf9f6;
-    --muted: #a89a78;
-  }
-}
-
-/* Base styles */
+/* Base styles using CSS variables directly */
 @layer base {
   body {
-    @apply bg-background text-text antialiased;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    @apply antialiased;
   }
+}
+
+/* Utility classes that use our theme colors */
+@layer utilities {
+  .bg-background { background-color: var(--color-background); }
+  .bg-surface { background-color: var(--color-surface); }
+  .bg-primary { background-color: var(--color-primary); }
+  .bg-secondary { background-color: var(--color-secondary); }
+
+  .text-text { color: var(--color-text); }
+  .text-muted { color: var(--color-muted); }
+  .text-primary { color: var(--color-primary); }
+  .text-secondary { color: var(--color-secondary); }
+
+  .border-muted { border-color: var(--color-muted); }
+  .border-primary { border-color: var(--color-primary); }
+
+  .hover\:text-text:hover { color: var(--color-text); }
+  .hover\:text-primary:hover { color: var(--color-primary); }
+  .hover\:border-primary:hover { border-color: var(--color-primary); }
 }
