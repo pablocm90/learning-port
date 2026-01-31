@@ -29,9 +29,19 @@
   --muted: #6a5837;
 }
 
-/* Dark mode (system preference) */
+/* Dark mode via class (manual toggle) */
+:root.dark {
+  --bg: #23231a;
+  --surface: #322f20;
+  --primary: #fe5f00;
+  --secondary: #b8ad3a;
+  --text: #faf9f6;
+  --muted: #a89a78;
+}
+
+/* Dark mode via system preference (when no manual override) */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --bg: #23231a;
     --surface: #322f20;
     --primary: #fe5f00;
