@@ -9,8 +9,7 @@ RSpec.describe Category, type: :model do
   end
 
   describe 'associations' do
-    # Note: This test will pass once LearningMoment model is created in Task 2
-    xit { should have_many(:learning_moments).dependent(:destroy) }
+    it { should have_many(:learning_moments).dependent(:destroy) }
   end
 
   describe 'scopes' do

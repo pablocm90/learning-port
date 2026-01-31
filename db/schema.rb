@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_31_102936) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_31_103327) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -38,6 +38,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_31_102936) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "learning_moments", force: :cascade do |t|
+    t.bigint "category_id", null: false
+    t.integer "engagement_type", null: false
+    t.string "description", null: false
+    t.string "url"
+    t.date "occurred_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_learning_moments_on_category_id"
+  end
+
   create_table "podcast_episodes", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -63,4 +74,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_31_102936) do
     t.index ["email"], name: "index_writers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_writers_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "learning_moments", "categories"
 end
