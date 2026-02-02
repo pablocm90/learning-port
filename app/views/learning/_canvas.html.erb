@@ -25,7 +25,7 @@
                  Z"
               fill="var(--theme-primary)"/>
 
-        <!-- Drips - simple teardrop shapes -->
+        <!-- Drips - tapered shape: wide at top, narrow droplet at bottom -->
         <% categories.each_with_index do |category, index| %>
           <%
             x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
@@ -34,9 +34,9 @@
             max_drip = 350
             drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
 
-            # Simple widths
-            top_w = 30
-            blob_w = 22
+            # Tapered widths - wide at top, small droplet at bottom
+            top_w = 40
+            droplet_r = 8
 
             y_start = 65
             y_end = y_start + drip_length
@@ -46,14 +46,14 @@
              data-drip-id="<%= category.id %>"
              data-action="click->paint-drip#toggle">
 
-            <!-- Simple drip: rectangle top flowing into teardrop bottom -->
+            <!-- Tapered drip: wide at top, curves inward to small droplet -->
             <path d="M <%= x_pos - top_w/2 %>,<%= y_start %>
-                     L <%= x_pos - top_w/2 %>,<%= y_end - 50 %>
-                     Q <%= x_pos - top_w/2 %>,<%= y_end - 30 %> <%= x_pos - blob_w/2 %>,<%= y_end - 20 %>
-                     Q <%= x_pos - blob_w/2 - 8 %>,<%= y_end %> <%= x_pos %>,<%= y_end + 15 %>
-                     Q <%= x_pos + blob_w/2 + 8 %>,<%= y_end %> <%= x_pos + blob_w/2 %>,<%= y_end - 20 %>
-                     Q <%= x_pos + top_w/2 %>,<%= y_end - 30 %> <%= x_pos + top_w/2 %>,<%= y_end - 50 %>
-                     L <%= x_pos + top_w/2 %>,<%= y_start %>
+                     Q <%= x_pos - top_w/3 %>,<%= y_start + drip_length * 0.4 %>
+                       <%= x_pos - droplet_r %>,<%= y_end - droplet_r * 2 %>
+                     A <%= droplet_r %> <%= droplet_r %> 0 1 0
+                       <%= x_pos + droplet_r %>,<%= y_end - droplet_r * 2 %>
+                     Q <%= x_pos + top_w/3 %>,<%= y_start + drip_length * 0.4 %>
+                       <%= x_pos + top_w/2 %>,<%= y_start %>
                      Z"
                   fill="var(--theme-primary)"/>
           </g>

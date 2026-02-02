@@ -16,27 +16,27 @@
                Z"
             fill="var(--theme-primary)"/>
 
-      <!-- Drips -->
+      <!-- Drips - tapered -->
       <% categories.each_with_index do |category, index| %>
         <%
           x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
           drip_length = 40 + (depth_percentage / 100.0 * 35)
 
-          top_w = 14
-          blob_w = 10
+          top_w = 18
+          droplet_r = 4
 
           y_start = 32
           y_end = y_start + drip_length
         %>
 
         <path d="M <%= x_pos - top_w/2 %>,<%= y_start %>
-                 L <%= x_pos - top_w/2 %>,<%= y_end - 20 %>
-                 Q <%= x_pos - top_w/2 %>,<%= y_end - 12 %> <%= x_pos - blob_w/2 %>,<%= y_end - 8 %>
-                 Q <%= x_pos - blob_w/2 - 4 %>,<%= y_end %> <%= x_pos %>,<%= y_end + 6 %>
-                 Q <%= x_pos + blob_w/2 + 4 %>,<%= y_end %> <%= x_pos + blob_w/2 %>,<%= y_end - 8 %>
-                 Q <%= x_pos + top_w/2 %>,<%= y_end - 12 %> <%= x_pos + top_w/2 %>,<%= y_end - 20 %>
-                 L <%= x_pos + top_w/2 %>,<%= y_start %>
+                 Q <%= x_pos - top_w/3 %>,<%= y_start + drip_length * 0.4 %>
+                   <%= x_pos - droplet_r %>,<%= y_end - droplet_r * 2 %>
+                 A <%= droplet_r %> <%= droplet_r %> 0 1 0
+                   <%= x_pos + droplet_r %>,<%= y_end - droplet_r * 2 %>
+                 Q <%= x_pos + top_w/3 %>,<%= y_start + drip_length * 0.4 %>
+                   <%= x_pos + top_w/2 %>,<%= y_start %>
                  Z"
               fill="var(--theme-primary)"/>
       <% end %>
