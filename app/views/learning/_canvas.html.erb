@@ -1,44 +1,57 @@
 <div class="paint-drip-canvas py-16" data-controller="paint-drip" data-action="click@window->paint-drip#closeOnClickOutside">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <%
-      drip_width = 60
-      gap_between = (100.0 - (categories.count * 8)) / (categories.count + 1)
-    %>
-
     <!-- Combined Brush Stroke with Drips -->
     <svg class="w-full" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMin meet">
       <defs>
         <!-- Gradient for the paint -->
         <linearGradient id="paint-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
-          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.7;" />
+          <stop offset="50%" style="stop-color: var(--theme-primary); stop-opacity: 0.9;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.75;" />
         </linearGradient>
 
-        <!-- Filter for paint texture -->
-        <filter id="paint-texture" x="-5%" y="-5%" width="110%" height="110%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+        <!-- Highlight gradient for shine effect -->
+        <linearGradient id="paint-highlight" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color: white; stop-opacity: 0;" />
+          <stop offset="30%" style="stop-color: white; stop-opacity: 0.15;" />
+          <stop offset="50%" style="stop-color: white; stop-opacity: 0;" />
+        </linearGradient>
+
+        <!-- Subtle texture filter -->
+        <filter id="paint-texture" x="-2%" y="-2%" width="104%" height="104%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
 
-      <!-- Main brush stroke band with organic edges -->
-      <path d="M 0,25
-               Q 50,5 100,20
-               Q 200,40 300,15
-               Q 400,35 500,10
-               Q 600,30 700,18
-               Q 800,38 900,12
-               Q 950,28 1000,20
-               L 1000,60
-               Q 950,55 900,62
-               Q 800,58 700,65
-               Q 600,55 500,63
-               Q 400,58 300,65
-               Q 200,57 100,62
-               Q 50,58 0,60
+      <!-- Main brush stroke band -->
+      <path d="M 0,30
+               Q 100,15 200,28
+               Q 350,45 500,25
+               Q 650,40 800,30
+               Q 900,20 1000,35
+               L 1000,55
+               Q 900,50 800,58
+               Q 650,52 500,60
+               Q 350,55 200,62
+               Q 100,58 0,55
                Z"
             fill="url(#paint-gradient)"
             filter="url(#paint-texture)"/>
+
+      <!-- Brush stroke highlight -->
+      <path d="M 0,35
+               Q 100,25 200,35
+               Q 350,45 500,32
+               Q 650,42 800,38
+               Q 900,30 1000,40
+               L 1000,45
+               Q 900,38 800,45
+               Q 650,40 500,48
+               Q 350,42 200,50
+               Q 100,45 0,48
+               Z"
+            fill="url(#paint-highlight)"/>
 
       <!-- Drips flowing from the brush stroke -->
       <% categories.each_with_index do |category, index| %>
@@ -48,59 +61,73 @@
 
           # Calculate drip height based on depth
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-          min_drip = 80
-          max_drip = 380
+          min_drip = 100
+          max_drip = 350
           drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
 
-          # Vary width slightly for organic look
-          drip_w = 28 + (index % 3) * 4
+          # Consistent width for cleaner look
+          drip_w = 24
           half_w = drip_w / 2
 
-          # Control points for the drip curve
-          y_start = 55
+          # Drip coordinates
+          y_start = 52
           y_end = y_start + drip_length
-          bulge_y = y_end - 25
+
+          # Engagement types with their vertical positions (distributed along drip)
+          engagement_positions = {
+            'consumed' => 0.15,      # Near top
+            'experimented' => 0.35,  # Upper-middle
+            'applied' => 0.55,       # Lower-middle
+            'shared' => 0.75         # Near bottom
+          }
         %>
 
         <!-- Drip shape -->
-        <g class="drip-group cursor-pointer transition-transform duration-300 hover:scale-105"
+        <g class="drip-group cursor-pointer transition-all duration-300 hover:brightness-110"
            data-drip-id="<%= category.id %>"
            data-action="click->paint-drip#toggle">
 
-          <path d="M <%= x_pos - half_w %>,<%= y_start %>
-                   Q <%= x_pos - half_w - 2 %>,<%= y_start + drip_length * 0.3 %> <%= x_pos - half_w + 3 %>,<%= y_start + drip_length * 0.6 %>
-                   Q <%= x_pos - half_w - 1 %>,<%= bulge_y %> <%= x_pos - half_w + 5 %>,<%= bulge_y + 10 %>
-                   Q <%= x_pos %>,<%= y_end + 15 %> <%= x_pos + half_w - 5 %>,<%= bulge_y + 10 %>
-                   Q <%= x_pos + half_w + 1 %>,<%= bulge_y %> <%= x_pos + half_w - 3 %>,<%= y_start + drip_length * 0.6 %>
-                   Q <%= x_pos + half_w + 2 %>,<%= y_start + drip_length * 0.3 %> <%= x_pos + half_w %>,<%= y_start %>
+          <!-- Classic teardrop drip shape -->
+          <path d="M <%= x_pos %>,<%= y_start %>
+                   C <%= x_pos - half_w %>,<%= y_start + 20 %> <%= x_pos - half_w - 2 %>,<%= y_end - 40 %> <%= x_pos %>,<%= y_end %>
+                   C <%= x_pos + half_w + 2 %>,<%= y_end - 40 %> <%= x_pos + half_w %>,<%= y_start + 20 %> <%= x_pos %>,<%= y_start %>
                    Z"
                 fill="url(#paint-gradient)"
-                filter="url(#paint-texture)"
-                style="opacity: <%= 0.85 + (depth_percentage / 100.0 * 0.15) %>;"/>
+                filter="url(#paint-texture)"/>
 
-          <!-- Category name above the drip -->
-          <text x="<%= x_pos %>" y="35"
+          <!-- Drip highlight for depth -->
+          <path d="M <%= x_pos - 2 %>,<%= y_start + 15 %>
+                   C <%= x_pos - half_w + 5 %>,<%= y_start + 30 %> <%= x_pos - half_w + 6 %>,<%= y_end - 60 %> <%= x_pos - 3 %>,<%= y_end - 20 %>
+                   C <%= x_pos - half_w + 8 %>,<%= y_end - 50 %> <%= x_pos - half_w + 7 %>,<%= y_start + 25 %> <%= x_pos - 2 %>,<%= y_start + 15 %>
+                   Z"
+                fill="url(#paint-highlight)"
+                style="opacity: 0.4;"/>
+
+          <!-- Category name in the brush stroke -->
+          <text x="<%= x_pos %>" y="42"
                 text-anchor="middle"
-                class="fill-white text-sm font-medium"
-                style="font-size: 14px; font-weight: 500;">
+                class="fill-current"
+                style="font-size: 13px; font-weight: 600; fill: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
             <%= category.name %>
           </text>
 
-          <!-- Engagement icons below the drip tip -->
-          <g transform="translate(<%= x_pos %>, <%= y_end + 35 %>)">
-            <% types = category.engagement_types_present %>
-            <% types.each_with_index do |type, i| %>
-              <% icon_x = (i - (types.length - 1) / 2.0) * 18 %>
-              <text x="<%= icon_x %>" y="0" text-anchor="middle" style="font-size: 14px;">
-                <%= case type
-                    when 'consumed' then '📖'
-                    when 'experimented' then '🧪'
-                    when 'applied' then '🔨'
-                    when 'shared' then '📣'
-                    end %>
-              </text>
-            <% end %>
-          </g>
+          <!-- Engagement icons distributed along the drip -->
+          <% category.engagement_types_present.each do |type| %>
+            <%
+              icon_y = y_start + (drip_length * engagement_positions[type])
+            %>
+            <text x="<%= x_pos %>" y="<%= icon_y %>"
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  style="font-size: 16px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));">
+              <%= case type
+                  when 'consumed' then '📖'
+                  when 'experimented' then '🧪'
+                  when 'applied' then '🔨'
+                  when 'shared' then '📣'
+                  end %>
+            </text>
+          <% end %>
         </g>
       <% end %>
     </svg>

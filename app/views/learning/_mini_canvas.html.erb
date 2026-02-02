@@ -1,57 +1,71 @@
 <%= link_to learning_portfolio_path, class: "block hover:opacity-90 transition" do %>
-  <svg class="w-full" viewBox="0 0 400 150" preserveAspectRatio="xMidYMin meet">
+  <svg class="w-full" viewBox="0 0 400 120" preserveAspectRatio="xMidYMin meet">
     <defs>
       <linearGradient id="mini-paint-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
-        <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.7;" />
+        <stop offset="50%" style="stop-color: var(--theme-primary); stop-opacity: 0.9;" />
+        <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.75;" />
       </linearGradient>
-      <filter id="mini-paint-texture" x="-5%" y="-5%" width="110%" height="110%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="noise"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+      <linearGradient id="mini-paint-highlight" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color: white; stop-opacity: 0;" />
+        <stop offset="30%" style="stop-color: white; stop-opacity: 0.15;" />
+        <stop offset="50%" style="stop-color: white; stop-opacity: 0;" />
+      </linearGradient>
+      <filter id="mini-paint-texture" x="-2%" y="-2%" width="104%" height="104%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="1" xChannelSelector="R" yChannelSelector="G"/>
       </filter>
     </defs>
 
     <!-- Brush stroke band -->
     <path d="M 0,12
-             Q 50,5 100,15
-             Q 150,8 200,12
-             Q 250,6 300,14
-             Q 350,9 400,10
-             L 400,28
-             Q 350,26 300,30
-             Q 250,27 200,32
-             Q 150,28 100,30
-             Q 50,27 0,30
+             Q 50,6 100,14
+             Q 200,20 300,12
+             Q 350,8 400,15
+             L 400,25
+             Q 350,22 300,28
+             Q 200,24 100,30
+             Q 50,26 0,28
              Z"
           fill="url(#mini-paint-gradient)"
           filter="url(#mini-paint-texture)"/>
+
+    <!-- Brush stroke highlight -->
+    <path d="M 0,15
+             Q 50,10 100,17
+             Q 200,22 300,15
+             Q 350,12 400,18
+             L 400,21
+             Q 350,18 300,22
+             Q 200,20 100,25
+             Q 50,22 0,24
+             Z"
+          fill="url(#mini-paint-highlight)"/>
 
     <!-- Drips -->
     <% categories.each_with_index do |category, index| %>
       <%
         x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
         depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-        min_drip = 25
-        max_drip = 90
+        min_drip = 30
+        max_drip = 70
         drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
-        drip_w = 14 + (index % 2) * 2
+        drip_w = 10
         half_w = drip_w / 2
-        y_start = 26
+        y_start = 24
         y_end = y_start + drip_length
       %>
 
-      <!-- Drip -->
-      <path d="M <%= x_pos - half_w %>,<%= y_start %>
-               Q <%= x_pos - half_w - 1 %>,<%= y_start + drip_length * 0.5 %> <%= x_pos - half_w + 2 %>,<%= y_end - 8 %>
-               Q <%= x_pos %>,<%= y_end + 5 %> <%= x_pos + half_w - 2 %>,<%= y_end - 8 %>
-               Q <%= x_pos + half_w + 1 %>,<%= y_start + drip_length * 0.5 %> <%= x_pos + half_w %>,<%= y_start %>
+      <!-- Teardrop drip -->
+      <path d="M <%= x_pos %>,<%= y_start %>
+               C <%= x_pos - half_w %>,<%= y_start + 10 %> <%= x_pos - half_w - 1 %>,<%= y_end - 15 %> <%= x_pos %>,<%= y_end %>
+               C <%= x_pos + half_w + 1 %>,<%= y_end - 15 %> <%= x_pos + half_w %>,<%= y_start + 10 %> <%= x_pos %>,<%= y_start %>
                Z"
             fill="url(#mini-paint-gradient)"
-            filter="url(#mini-paint-texture)"
-            style="opacity: <%= 0.8 + (depth_percentage / 100.0 * 0.2) %>;"/>
+            filter="url(#mini-paint-texture)"/>
 
       <!-- Category name -->
-      <text x="<%= x_pos %>" y="<%= y_end + 20 %>"
+      <text x="<%= x_pos %>" y="<%= y_end + 14 %>"
             text-anchor="middle"
             class="fill-current text-muted"
             style="font-size: 9px; font-weight: 500;">
