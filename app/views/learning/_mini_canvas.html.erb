@@ -3,88 +3,101 @@
     <defs>
       <linearGradient id="mini-paint-base" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
-        <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.95;" />
+        <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
       </linearGradient>
 
-      <!-- Realistic paint filter (scaled for mini) -->
       <filter id="mini-paint-effect" x="-5%" y="-5%" width="110%" height="110%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="20" result="noise"/>
-        <feDiffuseLighting in="noise" lighting-color="#ffffff" surfaceScale="1" diffuseConstant="0.7" result="light">
-          <feDistantLight azimuth="135" elevation="55"/>
-        </feDiffuseLighting>
-        <feSpecularLighting in="noise" specularConstant="0.5" specularExponent="12" lighting-color="#ffffff" surfaceScale="0.8" result="specular">
+        <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="15" result="noise"/>
+        <feDiffuseLighting in="noise" lighting-color="#ffffff" surfaceScale="0.6" diffuseConstant="1.1" result="light">
           <feDistantLight azimuth="135" elevation="65"/>
-        </feSpecularLighting>
-        <feBlend in="SourceGraphic" in2="light" mode="multiply" result="textured"/>
-        <feBlend in="textured" in2="specular" mode="screen" result="glossy"/>
-        <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="8" result="edgeNoise"/>
-        <feDisplacementMap in="glossy" in2="edgeNoise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+        </feDiffuseLighting>
+        <feComposite in="SourceGraphic" in2="light" operator="arithmetic" k1="0" k2="0.85" k3="0.15" k4="0" result="textured"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="7" result="edgeNoise"/>
+        <feDisplacementMap in="textured" in2="edgeNoise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
       </filter>
     </defs>
 
     <g filter="url(#mini-paint-effect)">
-      <!-- Brush stroke - flat top, tapered end -->
+      <%
+        srand(99)
+      %>
+
+      <!-- Brush stroke -->
       <path d="M -5,12
                L 340,12
-               Q 370,13 386,17
-               Q 396,24 398,32
-               Q 388,30 372,34
-               Q 340,36 280,40
-               Q 200,37 120,42
-               Q 50,38 -5,42
+               Q 365,<%= 12 + rand(3) %> 382,<%= 16 + rand(4) %>
+               Q 394,<%= 22 + rand(5) %> 398,<%= 30 + rand(4) %>
+               Q 385,<%= 28 + rand(3) %> 365,<%= 34 + rand(4) %>
+               Q 320,<%= 36 + rand(4) %> 260,<%= 40 + rand(3) %>
+               Q 200,<%= 38 + rand(4) %> 140,<%= 42 + rand(3) %>
+               Q 70,<%= 39 + rand(4) %> -5,<%= 41 + rand(3) %>
                Z"
             fill="url(#mini-paint-base)"/>
 
       <!-- Drips -->
       <% categories.each_with_index do |category, index| %>
         <%
-          x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
+          x_base = ((index + 1) * (400.0 / (categories.count + 1))).to_i
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-          min_drip = 45
-          max_drip = 70
-          drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
+          drip_length = 45 + (depth_percentage / 100.0 * 30)
 
-          merge_w = 24
-          neck_w = 11
-          mid_w = 14
-          blob_w = 18
+          x_offset = rand(-4..4)
+          x_pos = x_base + x_offset
 
-          y_merge = 28
-          y_exit = 40
-          y_neck = y_exit + 14
-          y_mid = y_exit + drip_length * 0.45
-          y_bulge = y_exit + drip_length * 0.72
-          y_blob_top = y_exit + drip_length - 16
+          top_w_left = 10 + rand(4)
+          top_w_right = 10 + rand(4)
+          neck_w_left = 5 + rand(2)
+          neck_w_right = 5 + rand(2)
+          mid_w_left = 6 + rand(3)
+          mid_w_right = 6 + rand(3)
+          blob_w_left = 8 + rand(3)
+          blob_w_right = 8 + rand(3)
+
+          y_start = 28 + rand(4)
+          y_exit = 40 + rand(3)
+          y_neck = y_exit + 12 + rand(6)
+          y_mid = y_exit + drip_length * 0.5
+          y_blob = y_exit + drip_length - 10
           y_end = y_exit + drip_length
-
-          x_wobble = (index % 3 - 1) * 2
         %>
 
-        <path d="M <%= x_pos - merge_w/2 + x_wobble %>,<%= y_merge %>
-                 Q <%= x_pos - merge_w/2 - 3 + x_wobble %>,<%= y_exit %> <%= x_pos - neck_w/2 + x_wobble %>,<%= y_neck %>
-                 Q <%= x_pos - mid_w/2 - 2 + x_wobble %>,<%= y_mid - 14 %> <%= x_pos - mid_w/2 + x_wobble %>,<%= y_mid %>
-                 Q <%= x_pos - mid_w/2 + 2 + x_wobble %>,<%= y_bulge - 7 %> <%= x_pos - blob_w/2 + x_wobble %>,<%= y_bulge %>
-                 Q <%= x_pos - blob_w/2 - 3 + x_wobble %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 2 + x_wobble %>,<%= y_blob_top + 6 %>
-                 Q <%= x_pos - blob_w/3 + x_wobble %>,<%= y_end + 5 %> <%= x_pos + x_wobble %>,<%= y_end + 7 %>
-                 Q <%= x_pos + blob_w/3 + x_wobble %>,<%= y_end + 5 %> <%= x_pos + blob_w/2 - 2 + x_wobble %>,<%= y_blob_top + 6 %>
-                 Q <%= x_pos + blob_w/2 + 3 + x_wobble %>,<%= y_blob_top %> <%= x_pos + blob_w/2 + x_wobble %>,<%= y_bulge %>
-                 Q <%= x_pos + mid_w/2 - 2 + x_wobble %>,<%= y_bulge - 7 %> <%= x_pos + mid_w/2 + x_wobble %>,<%= y_mid %>
-                 Q <%= x_pos + mid_w/2 + 2 + x_wobble %>,<%= y_mid - 14 %> <%= x_pos + neck_w/2 + x_wobble %>,<%= y_neck %>
-                 Q <%= x_pos + merge_w/2 + 3 + x_wobble %>,<%= y_exit %> <%= x_pos + merge_w/2 + x_wobble %>,<%= y_merge %>
+        <path d="M <%= x_pos - top_w_left %>,<%= y_start %>
+                 Q <%= x_pos - top_w_left - rand(2) %>,<%= y_exit + rand(3) %>
+                   <%= x_pos - neck_w_left %>,<%= y_neck %>
+                 Q <%= x_pos - neck_w_left - rand(2) %>,<%= y_mid - 5 + rand(4) %>
+                   <%= x_pos - mid_w_left %>,<%= y_mid %>
+                 Q <%= x_pos - mid_w_left + rand(2) %>,<%= y_blob - 8 + rand(4) %>
+                   <%= x_pos - blob_w_left %>,<%= y_blob %>
+                 Q <%= x_pos - blob_w_left + rand(2) %>,<%= y_end - 3 + rand(2) %>
+                   <%= x_pos - rand(2) %>,<%= y_end + 5 + rand(3) %>
+                 Q <%= x_pos + blob_w_right - rand(2) %>,<%= y_end - 3 + rand(2) %>
+                   <%= x_pos + blob_w_right %>,<%= y_blob %>
+                 Q <%= x_pos + mid_w_right - rand(2) %>,<%= y_blob - 8 + rand(4) %>
+                   <%= x_pos + mid_w_right %>,<%= y_mid %>
+                 Q <%= x_pos + neck_w_right + rand(2) %>,<%= y_mid - 5 + rand(4) %>
+                   <%= x_pos + neck_w_right %>,<%= y_neck %>
+                 Q <%= x_pos + top_w_right + rand(2) %>,<%= y_exit + rand(3) %>
+                   <%= x_pos + top_w_right %>,<%= y_start %>
                  Z"
               fill="url(#mini-paint-base)"/>
       <% end %>
+
+      <%
+        srand
+      %>
     </g>
 
     <!-- Category names -->
     <% categories.each_with_index do |category, index| %>
       <%
-        x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
+        srand(99 + index)
+        x_base = ((index + 1) * (400.0 / (categories.count + 1))).to_i
         depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-        drip_length = 45 + (depth_percentage / 100.0 * 25)
-        y_end = 40 + drip_length
+        drip_length = 45 + (depth_percentage / 100.0 * 30)
+        y_end = 40 + rand(3) + drip_length
+        srand
       %>
-      <text x="<%= x_pos %>" y="<%= y_end + 18 %>"
+      <text x="<%= x_base %>" y="<%= y_end + 16 %>"
             text-anchor="middle"
             class="fill-current text-muted"
             style="font-size: 9px; font-weight: 500;">

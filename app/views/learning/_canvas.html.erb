@@ -2,166 +2,174 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <svg class="w-full" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMin meet">
       <defs>
-        <!-- Base paint color -->
+        <!-- Vibrant paint color -->
         <linearGradient id="paint-base" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
-          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.95;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
         </linearGradient>
 
         <!--
-          REALISTIC PAINT FILTER
-          Combines: texture grain + 3D lighting + color variation
+          PAINT TEXTURE FILTER - preserves color vibrancy
         -->
         <filter id="paint-effect" x="-5%" y="-5%" width="110%" height="110%">
-          <!-- 1. Generate noise texture for paint grain -->
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.04"
-            numOctaves="4"
-            seed="15"
-            result="noise"/>
+          <!-- Noise for texture -->
+          <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed="12" result="noise"/>
 
-          <!-- 2. Create 3D lighting effect - makes paint look thick/raised -->
-          <feDiffuseLighting
-            in="noise"
-            lighting-color="#ffffff"
-            surfaceScale="1.5"
-            diffuseConstant="0.8"
-            result="light">
-            <feDistantLight azimuth="135" elevation="50"/>
+          <!-- Subtle 3D lighting - lower intensity to preserve color -->
+          <feDiffuseLighting in="noise" lighting-color="#ffffff" surfaceScale="0.8" diffuseConstant="1.2" result="light">
+            <feDistantLight azimuth="135" elevation="65"/>
           </feDiffuseLighting>
 
-          <!-- 3. Add specular highlight for glossy wet paint -->
-          <feSpecularLighting
-            in="noise"
-            specularConstant="0.6"
-            specularExponent="15"
-            lighting-color="#ffffff"
-            surfaceScale="1"
-            result="specular">
-            <feDistantLight azimuth="135" elevation="60"/>
-          </feSpecularLighting>
+          <!-- Composite: overlay light on original to add texture while keeping color -->
+          <feComposite in="SourceGraphic" in2="light" operator="arithmetic" k1="0" k2="0.85" k3="0.15" k4="0" result="textured"/>
 
-          <!-- 4. Blend original with diffuse lighting -->
-          <feBlend in="SourceGraphic" in2="light" mode="multiply" result="textured"/>
-
-          <!-- 5. Add specular highlights on top -->
-          <feBlend in="textured" in2="specular" mode="screen" result="glossy"/>
-
-          <!-- 6. Slight edge distortion for organic feel -->
-          <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" seed="5" result="edgeNoise"/>
-          <feDisplacementMap in="glossy" in2="edgeNoise" scale="3" xChannelSelector="R" yChannelSelector="G" result="final"/>
+          <!-- Organic edge wobble -->
+          <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="2" seed="3" result="edgeNoise"/>
+          <feDisplacementMap in="textured" in2="edgeNoise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
 
-        <!-- Simpler filter for bubbles -->
-        <filter id="bubble-effect" x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" result="blur"/>
-          <feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" result="noise"/>
-          <feDisplacementMap in="blur" in2="noise" scale="1" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
-
-        <!-- Bubble fill - semi-transparent paint color -->
+        <!-- Bubble style -->
         <radialGradient id="bubble-fill" cx="35%" cy="35%">
           <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 0.5;" />
-          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.8;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.85;" />
         </radialGradient>
       </defs>
 
-      <!-- Paint layer with realistic effect -->
+      <!-- Paint with texture -->
       <g filter="url(#paint-effect)">
-        <!-- Brush stroke - flat top, organic bottom, tapered end -->
+        <%
+          # Seeded random for consistent but organic variations
+          srand(42)
+        %>
+
+        <!-- Brush stroke - irregular bottom edge -->
         <path d="M -10,25
                  L 850,25
-                 Q 920,26 960,32
-                 Q 985,42 995,58
-                 Q 975,54 945,60
-                 Q 880,65 780,74
-                 Q 620,67 480,77
-                 Q 320,70 180,76
-                 Q 80,68 -10,74
+                 Q 905,<%= 24 + rand(4) %> 950,<%= 30 + rand(6) %>
+                 Q 980,<%= 42 + rand(8) %> 992,<%= 55 + rand(6) %>
+                 Q 970,<%= 52 + rand(4) %> 935,<%= 58 + rand(5) %>
+                 Q 870,<%= 65 + rand(6) %> 780,<%= 72 + rand(5) %>
+                 Q 680,<%= 68 + rand(6) %> 580,<%= 74 + rand(5) %>
+                 Q 480,<%= 70 + rand(6) %> 380,<%= 76 + rand(5) %>
+                 Q 280,<%= 71 + rand(6) %> 180,<%= 75 + rand(5) %>
+                 Q 80,<%= 69 + rand(6) %> -10,<%= 73 + rand(4) %>
                  Z"
               fill="url(#paint-base)"/>
 
-        <!-- Drips merging from brush stroke -->
+        <!-- Drips - each one unique and asymmetric -->
         <% categories.each_with_index do |category, index| %>
           <%
-            x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
+            # Base position
+            x_base = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
+
+            # Drip length based on depth
             depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-            min_drip = 140
+            min_drip = 150
             max_drip = 400
             drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
 
-            merge_w = 55
-            neck_w = 22
-            mid_w = 28
-            blob_w = 36
+            # Random offset for this drip's x position
+            x_offset = rand(-8..8)
+            x_pos = x_base + x_offset
 
-            y_merge = 48
-            y_exit = 74
-            y_neck = y_exit + 35
-            y_mid = y_exit + drip_length * 0.45
-            y_bulge = y_exit + drip_length * 0.72
-            y_blob_top = y_exit + drip_length - 40
+            # Asymmetric widths - left and right sides different
+            top_w_left = 22 + rand(8)
+            top_w_right = 22 + rand(8)
+            neck_w_left = 10 + rand(4)
+            neck_w_right = 10 + rand(4)
+            mid_w_left = 12 + rand(5)
+            mid_w_right = 12 + rand(5)
+            bulge_w_left = 14 + rand(6)
+            bulge_w_right = 14 + rand(6)
+            blob_w_left = 16 + rand(5)
+            blob_w_right = 16 + rand(5)
+
+            # Vertical positions with randomness
+            y_start = 50 + rand(6)
+            y_exit = 74 + rand(4)
+            y_neck = y_exit + 25 + rand(15)
+            y_mid = y_exit + drip_length * (0.4 + rand * 0.1)
+            y_bulge = y_exit + drip_length * (0.65 + rand * 0.1)
+            y_blob = y_exit + drip_length - 25 - rand(10)
             y_end = y_exit + drip_length
 
-            x_wobble = (index % 3 - 1) * 4
+            # Random control point offsets for irregular curves
+            def wobble(base, range)
+              base + rand(-range..range)
+            end
           %>
 
           <g class="drip-group cursor-pointer"
              data-drip-id="<%= category.id %>"
              data-action="click->paint-drip#toggle">
-            <path d="M <%= x_pos - merge_w/2 + x_wobble %>,<%= y_merge %>
-                     Q <%= x_pos - merge_w/2 - 6 + x_wobble %>,<%= y_exit %> <%= x_pos - neck_w/2 + x_wobble %>,<%= y_neck %>
-                     Q <%= x_pos - mid_w/2 - 5 + x_wobble %>,<%= y_mid - 35 %> <%= x_pos - mid_w/2 + x_wobble %>,<%= y_mid %>
-                     Q <%= x_pos - mid_w/2 + 4 + x_wobble %>,<%= y_bulge - 18 %> <%= x_pos - blob_w/2 + x_wobble %>,<%= y_bulge %>
-                     Q <%= x_pos - blob_w/2 - 6 + x_wobble %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 5 + x_wobble %>,<%= y_blob_top + 14 %>
-                     Q <%= x_pos - blob_w/3 + x_wobble %>,<%= y_end + 12 %> <%= x_pos + x_wobble %>,<%= y_end + 16 %>
-                     Q <%= x_pos + blob_w/3 + x_wobble %>,<%= y_end + 12 %> <%= x_pos + blob_w/2 - 5 + x_wobble %>,<%= y_blob_top + 14 %>
-                     Q <%= x_pos + blob_w/2 + 6 + x_wobble %>,<%= y_blob_top %> <%= x_pos + blob_w/2 + x_wobble %>,<%= y_bulge %>
-                     Q <%= x_pos + mid_w/2 - 4 + x_wobble %>,<%= y_bulge - 18 %> <%= x_pos + mid_w/2 + x_wobble %>,<%= y_mid %>
-                     Q <%= x_pos + mid_w/2 + 5 + x_wobble %>,<%= y_mid - 35 %> <%= x_pos + neck_w/2 + x_wobble %>,<%= y_neck %>
-                     Q <%= x_pos + merge_w/2 + 6 + x_wobble %>,<%= y_exit %> <%= x_pos + merge_w/2 + x_wobble %>,<%= y_merge %>
+
+            <!-- Asymmetric drip path - left and right sides are independent -->
+            <path d="M <%= x_pos - top_w_left %>,<%= y_start %>
+                     Q <%= x_pos - top_w_left - rand(3) %>,<%= y_exit + rand(5) %>
+                       <%= x_pos - neck_w_left %>,<%= y_neck %>
+                     Q <%= x_pos - neck_w_left - rand(4) %>,<%= y_neck + (y_mid - y_neck) * 0.5 + rand(10) %>
+                       <%= x_pos - mid_w_left %>,<%= y_mid %>
+                     Q <%= x_pos - mid_w_left + rand(3) %>,<%= y_mid + (y_bulge - y_mid) * 0.5 + rand(8) %>
+                       <%= x_pos - bulge_w_left %>,<%= y_bulge %>
+                     Q <%= x_pos - bulge_w_left - rand(4) %>,<%= y_bulge + (y_blob - y_bulge) * 0.6 %>
+                       <%= x_pos - blob_w_left %>,<%= y_blob %>
+                     Q <%= x_pos - blob_w_left + rand(3) %>,<%= y_end - 5 + rand(4) %>
+                       <%= x_pos - rand(3) %>,<%= y_end + 10 + rand(5) %>
+                     Q <%= x_pos + blob_w_right - rand(3) %>,<%= y_end - 5 + rand(4) %>
+                       <%= x_pos + blob_w_right %>,<%= y_blob %>
+                     Q <%= x_pos + bulge_w_right + rand(4) %>,<%= y_bulge + (y_blob - y_bulge) * 0.6 %>
+                       <%= x_pos + bulge_w_right %>,<%= y_bulge %>
+                     Q <%= x_pos + mid_w_right - rand(3) %>,<%= y_mid + (y_bulge - y_mid) * 0.5 + rand(8) %>
+                       <%= x_pos + mid_w_right %>,<%= y_mid %>
+                     Q <%= x_pos + neck_w_right + rand(4) %>,<%= y_neck + (y_mid - y_neck) * 0.5 + rand(10) %>
+                       <%= x_pos + neck_w_right %>,<%= y_neck %>
+                     Q <%= x_pos + top_w_right + rand(3) %>,<%= y_exit + rand(5) %>
+                       <%= x_pos + top_w_right %>,<%= y_start %>
                      Z"
                   fill="url(#paint-base)"/>
           </g>
         <% end %>
+
+        <%
+          # Reset random seed
+          srand
+        %>
       </g>
 
-      <!-- Text and bubbles outside paint filter for clarity -->
+      <!-- Text and bubbles outside filter -->
       <% categories.each_with_index do |category, index| %>
         <%
-          x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
+          srand(42 + index)
+          x_base = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
+          x_pos = x_base + rand(-8..8)
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-          min_drip = 140
-          max_drip = 400
-          drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
-          y_exit = 74
+          drip_length = 150 + (depth_percentage / 100.0 * 250)
+          y_exit = 74 + rand(4)
           moments = category.learning_moments.chronological.to_a
           moment_count = moments.count
-          x_wobble = (index % 3 - 1) * 4
+          srand
         %>
 
         <!-- Category name -->
-        <text x="<%= x_pos %>" y="52"
+        <text x="<%= x_base %>" y="52"
               text-anchor="middle"
-              style="font-size: 14px; font-weight: 600; fill: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
+              style="font-size: 14px; font-weight: 600; fill: white; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
           <%= category.name %>
         </text>
 
         <!-- Learning moment bubbles -->
         <% if moment_count > 0 %>
-          <% usable_length = drip_length - 90 %>
+          <% usable_length = drip_length - 100 %>
           <% moments.each_with_index do |moment, m_idx| %>
             <%
               progress = moment_count > 1 ? m_idx.to_f / (moment_count - 1) : 0.5
-              bubble_y = y_exit + 55 + (progress * usable_length)
+              bubble_y = y_exit + 60 + (progress * usable_length)
               bubble_r = 14
             %>
-            <g filter="url(#bubble-effect)">
-              <circle cx="<%= x_pos + x_wobble %>" cy="<%= bubble_y %>" r="<%= bubble_r %>"
-                      fill="url(#bubble-fill)"/>
-            </g>
-            <text x="<%= x_pos + x_wobble %>" y="<%= bubble_y + 1 %>"
+            <circle cx="<%= x_pos %>" cy="<%= bubble_y %>" r="<%= bubble_r %>"
+                    fill="url(#bubble-fill)"
+                    style="filter: blur(0.3px);"/>
+            <text x="<%= x_pos %>" y="<%= bubble_y + 1 %>"
                   text-anchor="middle"
                   dominant-baseline="central"
                   style="font-size: 14px;">
