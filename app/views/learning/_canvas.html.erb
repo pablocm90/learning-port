@@ -1,104 +1,133 @@
 <div class="paint-drip-canvas py-16" data-controller="paint-drip" data-action="click@window->paint-drip#closeOnClickOutside">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Combined Brush Stroke with Drips -->
     <svg class="w-full" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMin meet">
       <defs>
-        <!-- Main paint gradient -->
-        <linearGradient id="paint-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <!-- Base paint color -->
+        <linearGradient id="paint-base" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
-          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.9;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.95;" />
         </linearGradient>
 
-        <!-- Bubble gradient - lighter version of paint color -->
-        <radialGradient id="bubble-fill" cx="40%" cy="40%">
-          <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 0.4;" />
-          <stop offset="70%" style="stop-color: var(--theme-primary); stop-opacity: 0.6;" />
-          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.75;" />
-        </radialGradient>
+        <!--
+          REALISTIC PAINT FILTER
+          Combines: texture grain + 3D lighting + color variation
+        -->
+        <filter id="paint-effect" x="-5%" y="-5%" width="110%" height="110%">
+          <!-- 1. Generate noise texture for paint grain -->
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.04"
+            numOctaves="4"
+            seed="15"
+            result="noise"/>
 
-        <!-- Organic edge filter - adds slight wobble to edges -->
-        <filter id="organic-edge" x="-3%" y="-3%" width="106%" height="106%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" seed="1"/>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+          <!-- 2. Create 3D lighting effect - makes paint look thick/raised -->
+          <feDiffuseLighting
+            in="noise"
+            lighting-color="#ffffff"
+            surfaceScale="1.5"
+            diffuseConstant="0.8"
+            result="light">
+            <feDistantLight azimuth="135" elevation="50"/>
+          </feDiffuseLighting>
+
+          <!-- 3. Add specular highlight for glossy wet paint -->
+          <feSpecularLighting
+            in="noise"
+            specularConstant="0.6"
+            specularExponent="15"
+            lighting-color="#ffffff"
+            surfaceScale="1"
+            result="specular">
+            <feDistantLight azimuth="135" elevation="60"/>
+          </feSpecularLighting>
+
+          <!-- 4. Blend original with diffuse lighting -->
+          <feBlend in="SourceGraphic" in2="light" mode="multiply" result="textured"/>
+
+          <!-- 5. Add specular highlights on top -->
+          <feBlend in="textured" in2="specular" mode="screen" result="glossy"/>
+
+          <!-- 6. Slight edge distortion for organic feel -->
+          <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" seed="5" result="edgeNoise"/>
+          <feDisplacementMap in="glossy" in2="edgeNoise" scale="3" xChannelSelector="R" yChannelSelector="G" result="final"/>
         </filter>
 
-        <!-- Clip paths will be defined per-drip -->
+        <!-- Simpler filter for bubbles -->
+        <filter id="bubble-effect" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" result="blur"/>
+          <feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" result="noise"/>
+          <feDisplacementMap in="blur" in2="noise" scale="1" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+
+        <!-- Bubble fill - semi-transparent paint color -->
+        <radialGradient id="bubble-fill" cx="35%" cy="35%">
+          <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 0.5;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.8;" />
+        </radialGradient>
       </defs>
 
-      <!-- Main paint group with organic filter -->
-      <g filter="url(#organic-edge)">
-        <!-- Brush stroke - flat top, wavy bottom where paint pools, tapered end -->
+      <!-- Paint layer with realistic effect -->
+      <g filter="url(#paint-effect)">
+        <!-- Brush stroke - flat top, organic bottom, tapered end -->
         <path d="M -10,25
                  L 850,25
-                 Q 920,25 960,30
-                 Q 990,38 1000,55
-                 Q 980,52 950,58
-                 Q 900,62 780,72
-                 Q 620,65 480,75
-                 Q 320,68 180,74
-                 Q 80,66 -10,72
+                 Q 920,26 960,32
+                 Q 985,42 995,58
+                 Q 975,54 945,60
+                 Q 880,65 780,74
+                 Q 620,67 480,77
+                 Q 320,70 180,76
+                 Q 80,68 -10,74
                  Z"
-              fill="url(#paint-gradient)"/>
+              fill="url(#paint-base)"/>
 
-        <!-- Drips that merge with brush stroke -->
+        <!-- Drips merging from brush stroke -->
         <% categories.each_with_index do |category, index| %>
           <%
-            # Calculate x position for this drip
             x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
-
-            # Calculate drip height based on depth
             depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
             min_drip = 140
             max_drip = 400
             drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
 
-            # Drip dimensions
-            merge_w = 50      # Wide where it merges with brush stroke
-            neck_w = 20       # Narrows as it flows down
-            mid_w = 26        # Slight bulge in middle
-            blob_w = 32       # Rounded blob at bottom
+            merge_w = 55
+            neck_w = 22
+            mid_w = 28
+            blob_w = 36
 
-            # Vertical positions - starts INSIDE the brush stroke
-            y_merge = 45      # Where drip starts merging (inside brush stroke)
-            y_exit = 72       # Bottom of brush stroke
-            y_neck = y_exit + 30
+            y_merge = 48
+            y_exit = 74
+            y_neck = y_exit + 35
             y_mid = y_exit + drip_length * 0.45
-            y_bulge = y_exit + drip_length * 0.7
-            y_blob_top = y_exit + drip_length - 35
+            y_bulge = y_exit + drip_length * 0.72
+            y_blob_top = y_exit + drip_length - 40
             y_end = y_exit + drip_length
 
-            # Get learning moments chronologically for bubble positions
-            moments = category.learning_moments.chronological.to_a
-            moment_count = moments.count
-
-            # Slight x variation for organic feel
-            x_wobble = (index % 3 - 1) * 3
+            x_wobble = (index % 3 - 1) * 4
           %>
 
-          <!-- Drip shape - merges smoothly from brush stroke -->
-          <g class="drip-group cursor-pointer transition-opacity duration-300 hover:opacity-90"
+          <g class="drip-group cursor-pointer"
              data-drip-id="<%= category.id %>"
              data-action="click->paint-drip#toggle">
-
-            <!-- Drip body - starts wide in brush stroke, narrows, ends in blob -->
             <path d="M <%= x_pos - merge_w/2 + x_wobble %>,<%= y_merge %>
-                     Q <%= x_pos - merge_w/2 - 5 + x_wobble %>,<%= y_exit %> <%= x_pos - neck_w/2 + x_wobble %>,<%= y_neck %>
-                     Q <%= x_pos - mid_w/2 - 4 + x_wobble %>,<%= y_mid - 30 %> <%= x_pos - mid_w/2 + x_wobble %>,<%= y_mid %>
-                     Q <%= x_pos - mid_w/2 + 3 + x_wobble %>,<%= y_bulge - 15 %> <%= x_pos - blob_w/2 + x_wobble %>,<%= y_bulge %>
-                     Q <%= x_pos - blob_w/2 - 5 + x_wobble %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 4 + x_wobble %>,<%= y_blob_top + 12 %>
-                     Q <%= x_pos - blob_w/3 + x_wobble %>,<%= y_end + 10 %> <%= x_pos + x_wobble %>,<%= y_end + 14 %>
-                     Q <%= x_pos + blob_w/3 + x_wobble %>,<%= y_end + 10 %> <%= x_pos + blob_w/2 - 4 + x_wobble %>,<%= y_blob_top + 12 %>
-                     Q <%= x_pos + blob_w/2 + 5 + x_wobble %>,<%= y_blob_top %> <%= x_pos + blob_w/2 + x_wobble %>,<%= y_bulge %>
-                     Q <%= x_pos + mid_w/2 - 3 + x_wobble %>,<%= y_bulge - 15 %> <%= x_pos + mid_w/2 + x_wobble %>,<%= y_mid %>
-                     Q <%= x_pos + mid_w/2 + 4 + x_wobble %>,<%= y_mid - 30 %> <%= x_pos + neck_w/2 + x_wobble %>,<%= y_neck %>
-                     Q <%= x_pos + merge_w/2 + 5 + x_wobble %>,<%= y_exit %> <%= x_pos + merge_w/2 + x_wobble %>,<%= y_merge %>
+                     Q <%= x_pos - merge_w/2 - 6 + x_wobble %>,<%= y_exit %> <%= x_pos - neck_w/2 + x_wobble %>,<%= y_neck %>
+                     Q <%= x_pos - mid_w/2 - 5 + x_wobble %>,<%= y_mid - 35 %> <%= x_pos - mid_w/2 + x_wobble %>,<%= y_mid %>
+                     Q <%= x_pos - mid_w/2 + 4 + x_wobble %>,<%= y_bulge - 18 %> <%= x_pos - blob_w/2 + x_wobble %>,<%= y_bulge %>
+                     Q <%= x_pos - blob_w/2 - 6 + x_wobble %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 5 + x_wobble %>,<%= y_blob_top + 14 %>
+                     Q <%= x_pos - blob_w/3 + x_wobble %>,<%= y_end + 12 %> <%= x_pos + x_wobble %>,<%= y_end + 16 %>
+                     Q <%= x_pos + blob_w/3 + x_wobble %>,<%= y_end + 12 %> <%= x_pos + blob_w/2 - 5 + x_wobble %>,<%= y_blob_top + 14 %>
+                     Q <%= x_pos + blob_w/2 + 6 + x_wobble %>,<%= y_blob_top %> <%= x_pos + blob_w/2 + x_wobble %>,<%= y_bulge %>
+                     Q <%= x_pos + mid_w/2 - 4 + x_wobble %>,<%= y_bulge - 18 %> <%= x_pos + mid_w/2 + x_wobble %>,<%= y_mid %>
+                     Q <%= x_pos + mid_w/2 + 5 + x_wobble %>,<%= y_mid - 35 %> <%= x_pos + neck_w/2 + x_wobble %>,<%= y_neck %>
+                     Q <%= x_pos + merge_w/2 + 6 + x_wobble %>,<%= y_exit %> <%= x_pos + merge_w/2 + x_wobble %>,<%= y_merge %>
                      Z"
-                  fill="url(#paint-gradient)"/>
+                  fill="url(#paint-base)"/>
           </g>
         <% end %>
       </g>
 
-      <!-- Category names and bubbles (outside filter for crisp text) -->
+      <!-- Text and bubbles outside paint filter for clarity -->
       <% categories.each_with_index do |category, index| %>
         <%
           x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
@@ -106,33 +135,32 @@
           min_drip = 140
           max_drip = 400
           drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
-          y_exit = 72
+          y_exit = 74
           moments = category.learning_moments.chronological.to_a
           moment_count = moments.count
-          x_wobble = (index % 3 - 1) * 3
+          x_wobble = (index % 3 - 1) * 4
         %>
 
-        <!-- Category name in the brush stroke -->
-        <text x="<%= x_pos %>" y="48"
+        <!-- Category name -->
+        <text x="<%= x_pos %>" y="52"
               text-anchor="middle"
-              style="font-size: 14px; font-weight: 600; fill: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
+              style="font-size: 14px; font-weight: 600; fill: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
           <%= category.name %>
         </text>
 
-        <!-- Learning moment bubbles - chronologically positioned -->
+        <!-- Learning moment bubbles -->
         <% if moment_count > 0 %>
-          <% usable_length = drip_length - 80 %>
+          <% usable_length = drip_length - 90 %>
           <% moments.each_with_index do |moment, m_idx| %>
             <%
-              # Position bubbles chronologically along the drip
               progress = moment_count > 1 ? m_idx.to_f / (moment_count - 1) : 0.5
-              bubble_y = y_exit + 50 + (progress * usable_length)
-              bubble_r = 13
+              bubble_y = y_exit + 55 + (progress * usable_length)
+              bubble_r = 14
             %>
-            <!-- Bubble - same color as paint, slightly lighter -->
-            <circle cx="<%= x_pos + x_wobble %>" cy="<%= bubble_y %>" r="<%= bubble_r %>"
-                    fill="url(#bubble-fill)"/>
-            <!-- Icon inside bubble - dark for contrast -->
+            <g filter="url(#bubble-effect)">
+              <circle cx="<%= x_pos + x_wobble %>" cy="<%= bubble_y %>" r="<%= bubble_r %>"
+                      fill="url(#bubble-fill)"/>
+            </g>
             <text x="<%= x_pos + x_wobble %>" y="<%= bubble_y + 1 %>"
                   text-anchor="middle"
                   dominant-baseline="central"
@@ -149,7 +177,7 @@
       <% end %>
     </svg>
 
-    <!-- Expanded moments panels (positioned below) -->
+    <!-- Expanded moments panels -->
     <div class="drips-details flex justify-around px-8 mt-4">
       <% categories.each do |category| %>
         <div data-drip-id="<%= category.id %>" class="drip-detail-container flex-1 max-w-xs mx-2">

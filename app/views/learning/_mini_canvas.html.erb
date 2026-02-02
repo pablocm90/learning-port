@@ -1,82 +1,88 @@
 <%= link_to learning_portfolio_path, class: "block hover:opacity-90 transition" do %>
   <svg class="w-full" viewBox="0 0 400 130" preserveAspectRatio="xMidYMin meet">
     <defs>
-      <linearGradient id="mini-paint-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <linearGradient id="mini-paint-base" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
-        <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.9;" />
+        <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.95;" />
       </linearGradient>
 
-      <!-- Organic edge filter -->
-      <filter id="mini-organic-edge" x="-3%" y="-3%" width="106%" height="106%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+      <!-- Realistic paint filter (scaled for mini) -->
+      <filter id="mini-paint-effect" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="20" result="noise"/>
+        <feDiffuseLighting in="noise" lighting-color="#ffffff" surfaceScale="1" diffuseConstant="0.7" result="light">
+          <feDistantLight azimuth="135" elevation="55"/>
+        </feDiffuseLighting>
+        <feSpecularLighting in="noise" specularConstant="0.5" specularExponent="12" lighting-color="#ffffff" surfaceScale="0.8" result="specular">
+          <feDistantLight azimuth="135" elevation="65"/>
+        </feSpecularLighting>
+        <feBlend in="SourceGraphic" in2="light" mode="multiply" result="textured"/>
+        <feBlend in="textured" in2="specular" mode="screen" result="glossy"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="8" result="edgeNoise"/>
+        <feDisplacementMap in="glossy" in2="edgeNoise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
       </filter>
     </defs>
 
-    <g filter="url(#mini-organic-edge)">
-      <!-- Brush stroke - flat top, wavy bottom, tapered end -->
+    <g filter="url(#mini-paint-effect)">
+      <!-- Brush stroke - flat top, tapered end -->
       <path d="M -5,12
                L 340,12
-               Q 370,12 385,15
-               Q 398,20 400,28
-               Q 390,26 375,30
-               Q 350,30 280,35
-               Q 200,32 120,36
-               Q 50,33 -5,35
+               Q 370,13 386,17
+               Q 396,24 398,32
+               Q 388,30 372,34
+               Q 340,36 280,40
+               Q 200,37 120,42
+               Q 50,38 -5,42
                Z"
-            fill="url(#mini-paint-gradient)"/>
+            fill="url(#mini-paint-base)"/>
 
-      <!-- Drips merging from brush stroke -->
+      <!-- Drips -->
       <% categories.each_with_index do |category, index| %>
         <%
           x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
           min_drip = 45
-          max_drip = 75
+          max_drip = 70
           drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
 
-          # Scaled dimensions
-          merge_w = 22
-          neck_w = 10
-          mid_w = 13
-          blob_w = 16
+          merge_w = 24
+          neck_w = 11
+          mid_w = 14
+          blob_w = 18
 
-          y_merge = 22
-          y_exit = 34
-          y_neck = y_exit + 12
+          y_merge = 28
+          y_exit = 40
+          y_neck = y_exit + 14
           y_mid = y_exit + drip_length * 0.45
-          y_bulge = y_exit + drip_length * 0.7
-          y_blob_top = y_exit + drip_length - 14
+          y_bulge = y_exit + drip_length * 0.72
+          y_blob_top = y_exit + drip_length - 16
           y_end = y_exit + drip_length
 
           x_wobble = (index % 3 - 1) * 2
         %>
 
         <path d="M <%= x_pos - merge_w/2 + x_wobble %>,<%= y_merge %>
-                 Q <%= x_pos - merge_w/2 - 2 + x_wobble %>,<%= y_exit %> <%= x_pos - neck_w/2 + x_wobble %>,<%= y_neck %>
-                 Q <%= x_pos - mid_w/2 - 2 + x_wobble %>,<%= y_mid - 12 %> <%= x_pos - mid_w/2 + x_wobble %>,<%= y_mid %>
-                 Q <%= x_pos - mid_w/2 + 1 + x_wobble %>,<%= y_bulge - 6 %> <%= x_pos - blob_w/2 + x_wobble %>,<%= y_bulge %>
-                 Q <%= x_pos - blob_w/2 - 2 + x_wobble %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 2 + x_wobble %>,<%= y_blob_top + 5 %>
-                 Q <%= x_pos - blob_w/3 + x_wobble %>,<%= y_end + 4 %> <%= x_pos + x_wobble %>,<%= y_end + 6 %>
-                 Q <%= x_pos + blob_w/3 + x_wobble %>,<%= y_end + 4 %> <%= x_pos + blob_w/2 - 2 + x_wobble %>,<%= y_blob_top + 5 %>
-                 Q <%= x_pos + blob_w/2 + 2 + x_wobble %>,<%= y_blob_top %> <%= x_pos + blob_w/2 + x_wobble %>,<%= y_bulge %>
-                 Q <%= x_pos + mid_w/2 - 1 + x_wobble %>,<%= y_bulge - 6 %> <%= x_pos + mid_w/2 + x_wobble %>,<%= y_mid %>
-                 Q <%= x_pos + mid_w/2 + 2 + x_wobble %>,<%= y_mid - 12 %> <%= x_pos + neck_w/2 + x_wobble %>,<%= y_neck %>
-                 Q <%= x_pos + merge_w/2 + 2 + x_wobble %>,<%= y_exit %> <%= x_pos + merge_w/2 + x_wobble %>,<%= y_merge %>
+                 Q <%= x_pos - merge_w/2 - 3 + x_wobble %>,<%= y_exit %> <%= x_pos - neck_w/2 + x_wobble %>,<%= y_neck %>
+                 Q <%= x_pos - mid_w/2 - 2 + x_wobble %>,<%= y_mid - 14 %> <%= x_pos - mid_w/2 + x_wobble %>,<%= y_mid %>
+                 Q <%= x_pos - mid_w/2 + 2 + x_wobble %>,<%= y_bulge - 7 %> <%= x_pos - blob_w/2 + x_wobble %>,<%= y_bulge %>
+                 Q <%= x_pos - blob_w/2 - 3 + x_wobble %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 2 + x_wobble %>,<%= y_blob_top + 6 %>
+                 Q <%= x_pos - blob_w/3 + x_wobble %>,<%= y_end + 5 %> <%= x_pos + x_wobble %>,<%= y_end + 7 %>
+                 Q <%= x_pos + blob_w/3 + x_wobble %>,<%= y_end + 5 %> <%= x_pos + blob_w/2 - 2 + x_wobble %>,<%= y_blob_top + 6 %>
+                 Q <%= x_pos + blob_w/2 + 3 + x_wobble %>,<%= y_blob_top %> <%= x_pos + blob_w/2 + x_wobble %>,<%= y_bulge %>
+                 Q <%= x_pos + mid_w/2 - 2 + x_wobble %>,<%= y_bulge - 7 %> <%= x_pos + mid_w/2 + x_wobble %>,<%= y_mid %>
+                 Q <%= x_pos + mid_w/2 + 2 + x_wobble %>,<%= y_mid - 14 %> <%= x_pos + neck_w/2 + x_wobble %>,<%= y_neck %>
+                 Q <%= x_pos + merge_w/2 + 3 + x_wobble %>,<%= y_exit %> <%= x_pos + merge_w/2 + x_wobble %>,<%= y_merge %>
                  Z"
-              fill="url(#mini-paint-gradient)"/>
+              fill="url(#mini-paint-base)"/>
       <% end %>
     </g>
 
-    <!-- Category names outside filter for crisp text -->
+    <!-- Category names -->
     <% categories.each_with_index do |category, index| %>
       <%
         x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
         depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-        min_drip = 45
-        max_drip = 75
-        drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
-        y_end = 34 + drip_length
+        drip_length = 45 + (depth_percentage / 100.0 * 25)
+        y_end = 40 + drip_length
       %>
       <text x="<%= x_pos %>" y="<%= y_end + 18 %>"
             text-anchor="middle"
