@@ -3,55 +3,57 @@
     <!-- Combined Brush Stroke with Drips -->
     <svg class="w-full" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMin meet">
       <defs>
-        <!-- Gradient for the paint -->
+        <!-- Gradient for wet paint look -->
         <linearGradient id="paint-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
-          <stop offset="50%" style="stop-color: var(--theme-primary); stop-opacity: 0.9;" />
-          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.75;" />
+          <stop offset="70%" style="stop-color: var(--theme-primary); stop-opacity: 0.95;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.85;" />
         </linearGradient>
 
-        <!-- Highlight gradient for shine effect -->
-        <linearGradient id="paint-highlight" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color: white; stop-opacity: 0;" />
-          <stop offset="30%" style="stop-color: white; stop-opacity: 0.15;" />
+        <!-- Glossy highlight for wet paint effect -->
+        <linearGradient id="gloss-highlight" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color: white; stop-opacity: 0.35;" />
           <stop offset="50%" style="stop-color: white; stop-opacity: 0;" />
         </linearGradient>
 
-        <!-- Subtle texture filter -->
-        <filter id="paint-texture" x="-2%" y="-2%" width="104%" height="104%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" result="noise"/>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
+        <!-- Bubble gradient for icons -->
+        <radialGradient id="bubble-gradient" cx="30%" cy="30%">
+          <stop offset="0%" style="stop-color: white; stop-opacity: 0.6;" />
+          <stop offset="100%" style="stop-color: white; stop-opacity: 0.15;" />
+        </radialGradient>
       </defs>
 
-      <!-- Main brush stroke band -->
-      <path d="M 0,30
-               Q 100,15 200,28
-               Q 350,45 500,25
-               Q 650,40 800,30
-               Q 900,20 1000,35
-               L 1000,55
-               Q 900,50 800,58
-               Q 650,52 500,60
-               Q 350,55 200,62
-               Q 100,58 0,55
+      <!-- Wet brush stroke band -->
+      <path d="M 0,20
+               Q 80,35 160,22
+               Q 280,40 400,18
+               Q 520,38 640,25
+               Q 760,42 880,20
+               Q 940,32 1000,25
+               L 1000,58
+               Q 940,52 880,60
+               Q 760,55 640,62
+               Q 520,58 400,65
+               Q 280,60 160,63
+               Q 80,57 0,60
                Z"
-            fill="url(#paint-gradient)"
-            filter="url(#paint-texture)"/>
+            fill="url(#paint-gradient)"/>
 
-      <!-- Brush stroke highlight -->
-      <path d="M 0,35
-               Q 100,25 200,35
-               Q 350,45 500,32
-               Q 650,42 800,38
-               Q 900,30 1000,40
-               L 1000,45
-               Q 900,38 800,45
-               Q 650,40 500,48
-               Q 350,42 200,50
-               Q 100,45 0,48
+      <!-- Brush stroke gloss -->
+      <path d="M 0,25
+               Q 80,38 160,28
+               Q 280,42 400,24
+               Q 520,40 640,30
+               Q 760,44 880,26
+               Q 940,35 1000,30
+               L 1000,40
+               Q 940,35 880,38
+               Q 760,36 640,40
+               Q 520,38 400,42
+               Q 280,40 160,43
+               Q 80,38 0,42
                Z"
-            fill="url(#paint-highlight)"/>
+            fill="url(#gloss-highlight)"/>
 
       <!-- Drips flowing from the brush stroke -->
       <% categories.each_with_index do |category, index| %>
@@ -61,72 +63,96 @@
 
           # Calculate drip height based on depth
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-          min_drip = 100
-          max_drip = 350
+          min_drip = 120
+          max_drip = 380
           drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
 
-          # Consistent width for cleaner look
-          drip_w = 24
-          half_w = drip_w / 2
+          # Drip dimensions - thick glossy style
+          neck_w = 18      # Narrow at top
+          mid_w = 28       # Bulges in middle
+          blob_w = 34      # Rounded blob at bottom
 
-          # Drip coordinates
-          y_start = 52
+          # Vertical positions
+          y_start = 55
+          y_neck = y_start + 25
+          y_mid = y_start + drip_length * 0.5
+          y_bulge = y_start + drip_length * 0.75
+          y_blob_top = y_start + drip_length - 30
           y_end = y_start + drip_length
 
-          # Engagement types with their vertical positions (distributed along drip)
-          engagement_positions = {
-            'consumed' => 0.15,      # Near top
-            'experimented' => 0.35,  # Upper-middle
-            'applied' => 0.55,       # Lower-middle
-            'shared' => 0.75         # Near bottom
-          }
+          # Get learning moments chronologically for bubble positions
+          moments = category.learning_moments.chronological.to_a
+          moment_count = moments.count
         %>
 
-        <!-- Drip shape -->
+        <!-- Drip shape - thick glossy with rounded blob bottom -->
         <g class="drip-group cursor-pointer transition-all duration-300 hover:brightness-110"
            data-drip-id="<%= category.id %>"
            data-action="click->paint-drip#toggle">
 
-          <!-- Classic teardrop drip shape -->
-          <path d="M <%= x_pos %>,<%= y_start %>
-                   C <%= x_pos - half_w %>,<%= y_start + 20 %> <%= x_pos - half_w - 2 %>,<%= y_end - 40 %> <%= x_pos %>,<%= y_end %>
-                   C <%= x_pos + half_w + 2 %>,<%= y_end - 40 %> <%= x_pos + half_w %>,<%= y_start + 20 %> <%= x_pos %>,<%= y_start %>
+          <!-- Main drip body -->
+          <path d="M <%= x_pos - neck_w/2 %>,<%= y_start %>
+                   L <%= x_pos - neck_w/2 %>,<%= y_neck %>
+                   Q <%= x_pos - mid_w/2 - 3 %>,<%= y_mid - 20 %> <%= x_pos - mid_w/2 %>,<%= y_mid %>
+                   Q <%= x_pos - mid_w/2 + 2 %>,<%= y_bulge - 10 %> <%= x_pos - blob_w/2 %>,<%= y_bulge %>
+                   Q <%= x_pos - blob_w/2 - 4 %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 2 %>,<%= y_blob_top + 10 %>
+                   Q <%= x_pos - blob_w/3 %>,<%= y_end + 8 %> <%= x_pos %>,<%= y_end + 12 %>
+                   Q <%= x_pos + blob_w/3 %>,<%= y_end + 8 %> <%= x_pos + blob_w/2 - 2 %>,<%= y_blob_top + 10 %>
+                   Q <%= x_pos + blob_w/2 + 4 %>,<%= y_blob_top %> <%= x_pos + blob_w/2 %>,<%= y_bulge %>
+                   Q <%= x_pos + mid_w/2 - 2 %>,<%= y_bulge - 10 %> <%= x_pos + mid_w/2 %>,<%= y_mid %>
+                   Q <%= x_pos + mid_w/2 + 3 %>,<%= y_mid - 20 %> <%= x_pos + neck_w/2 %>,<%= y_neck %>
+                   L <%= x_pos + neck_w/2 %>,<%= y_start %>
                    Z"
-                fill="url(#paint-gradient)"
-                filter="url(#paint-texture)"/>
+                fill="url(#paint-gradient)"/>
 
-          <!-- Drip highlight for depth -->
-          <path d="M <%= x_pos - 2 %>,<%= y_start + 15 %>
-                   C <%= x_pos - half_w + 5 %>,<%= y_start + 30 %> <%= x_pos - half_w + 6 %>,<%= y_end - 60 %> <%= x_pos - 3 %>,<%= y_end - 20 %>
-                   C <%= x_pos - half_w + 8 %>,<%= y_end - 50 %> <%= x_pos - half_w + 7 %>,<%= y_start + 25 %> <%= x_pos - 2 %>,<%= y_start + 15 %>
+          <!-- Glossy highlight on drip -->
+          <path d="M <%= x_pos - neck_w/2 + 3 %>,<%= y_start + 5 %>
+                   L <%= x_pos - neck_w/2 + 3 %>,<%= y_neck %>
+                   Q <%= x_pos - mid_w/2 + 5 %>,<%= y_mid - 15 %> <%= x_pos - mid_w/2 + 6 %>,<%= y_mid %>
+                   Q <%= x_pos - mid_w/2 + 8 %>,<%= y_bulge - 15 %> <%= x_pos - blob_w/2 + 10 %>,<%= y_bulge %>
+                   Q <%= x_pos - blob_w/2 + 8 %>,<%= y_blob_top - 5 %> <%= x_pos - 5 %>,<%= y_blob_top + 15 %>
+                   L <%= x_pos - 3 %>,<%= y_mid %>
+                   Q <%= x_pos - 4 %>,<%= y_neck + 10 %> <%= x_pos - neck_w/2 + 3 %>,<%= y_start + 5 %>
                    Z"
-                fill="url(#paint-highlight)"
-                style="opacity: 0.4;"/>
+                fill="url(#gloss-highlight)"
+                style="opacity: 0.7;"/>
 
           <!-- Category name in the brush stroke -->
-          <text x="<%= x_pos %>" y="42"
+          <text x="<%= x_pos %>" y="40"
                 text-anchor="middle"
-                class="fill-current"
-                style="font-size: 13px; font-weight: 600; fill: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
+                style="font-size: 13px; font-weight: 600; fill: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
             <%= category.name %>
           </text>
 
-          <!-- Engagement icons distributed along the drip -->
-          <% category.engagement_types_present.each do |type| %>
-            <%
-              icon_y = y_start + (drip_length * engagement_positions[type])
-            %>
-            <text x="<%= x_pos %>" y="<%= icon_y %>"
-                  text-anchor="middle"
-                  dominant-baseline="middle"
-                  style="font-size: 16px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));">
-              <%= case type
-                  when 'consumed' then '📖'
-                  when 'experimented' then '🧪'
-                  when 'applied' then '🔨'
-                  when 'shared' then '📣'
-                  end %>
-            </text>
+          <!-- Learning moment bubbles - chronologically positioned -->
+          <% if moment_count > 0 %>
+            <% usable_length = drip_length - 60 %>
+            <% moments.each_with_index do |moment, m_idx| %>
+              <%
+                # Position bubbles chronologically along the drip
+                # First moment near top, last near bottom
+                progress = moment_count > 1 ? m_idx.to_f / (moment_count - 1) : 0.5
+                bubble_y = y_start + 40 + (progress * usable_length)
+                bubble_r = 11
+              %>
+              <!-- Bubble -->
+              <circle cx="<%= x_pos %>" cy="<%= bubble_y %>" r="<%= bubble_r %>"
+                      fill="url(#bubble-gradient)"
+                      stroke="rgba(255,255,255,0.3)"
+                      stroke-width="1"/>
+              <!-- Icon inside bubble -->
+              <text x="<%= x_pos %>" y="<%= bubble_y %>"
+                    text-anchor="middle"
+                    dominant-baseline="central"
+                    style="font-size: 12px;">
+                <%= case moment.engagement_type
+                    when 'consumed' then '📖'
+                    when 'experimented' then '🧪'
+                    when 'applied' then '🔨'
+                    when 'shared' then '📣'
+                    end %>
+              </text>
+            <% end %>
           <% end %>
         </g>
       <% end %>
