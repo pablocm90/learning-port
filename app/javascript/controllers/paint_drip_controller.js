@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["drip", "moments"]
+  static targets = ["moments"]
   static values = { expanded: String }
 
   connect() {
@@ -9,7 +9,14 @@ export default class extends Controller {
   }
 
   toggle(event) {
-    const dripId = event.currentTarget.dataset.dripId
+    // Handle click on SVG group - find the drip-id from the clicked element or its parent
+    let target = event.target
+    while (target && !target.dataset?.dripId && target !== this.element) {
+      target = target.parentElement
+    }
+
+    const dripId = target?.dataset?.dripId
+    if (!dripId) return
 
     if (this.expandedValue === dripId) {
       this.collapse()
@@ -24,11 +31,19 @@ export default class extends Controller {
 
     // Expand the clicked drip
     this.expandedValue = dripId
-    const drip = this.element.querySelector(`[data-drip-id="${dripId}"]`)
-    const moments = drip?.querySelector('[data-paint-drip-target="moments"]')
 
-    if (drip && moments) {
-      drip.classList.add("expanded")
+    // Find the SVG drip group
+    const dripGroup = this.element.querySelector(`g[data-drip-id="${dripId}"]`)
+
+    // Find the corresponding moments panel in the details section
+    const detailContainer = this.element.querySelector(`.drip-detail-container[data-drip-id="${dripId}"]`)
+    const moments = detailContainer?.querySelector('[data-paint-drip-target="moments"]')
+
+    if (dripGroup) {
+      dripGroup.classList.add("expanded")
+    }
+
+    if (moments) {
       moments.classList.remove("hidden")
       moments.classList.add("animate-expand")
     }
@@ -37,11 +52,15 @@ export default class extends Controller {
   collapse() {
     if (!this.expandedValue) return
 
-    const drip = this.element.querySelector(`[data-drip-id="${this.expandedValue}"]`)
-    const moments = drip?.querySelector('[data-paint-drip-target="moments"]')
+    const dripGroup = this.element.querySelector(`g[data-drip-id="${this.expandedValue}"]`)
+    const detailContainer = this.element.querySelector(`.drip-detail-container[data-drip-id="${this.expandedValue}"]`)
+    const moments = detailContainer?.querySelector('[data-paint-drip-target="moments"]')
 
-    if (drip && moments) {
-      drip.classList.remove("expanded")
+    if (dripGroup) {
+      dripGroup.classList.remove("expanded")
+    }
+
+    if (moments) {
       moments.classList.add("hidden")
       moments.classList.remove("animate-expand")
     }
@@ -52,8 +71,14 @@ export default class extends Controller {
   closeOnClickOutside(event) {
     if (!this.expandedValue) return
 
-    const expandedDrip = this.element.querySelector(`[data-drip-id="${this.expandedValue}"]`)
-    if (expandedDrip && !expandedDrip.contains(event.target)) {
+    // Check if click is inside any drip group or moments panel
+    const dripGroup = this.element.querySelector(`g[data-drip-id="${this.expandedValue}"]`)
+    const detailContainer = this.element.querySelector(`.drip-detail-container[data-drip-id="${this.expandedValue}"]`)
+
+    const clickedInDrip = dripGroup?.contains(event.target)
+    const clickedInDetails = detailContainer?.contains(event.target)
+
+    if (!clickedInDrip && !clickedInDetails) {
       this.collapse()
     }
   }

@@ -1,18 +1,123 @@
 <div class="paint-drip-canvas py-16" data-controller="paint-drip" data-action="click@window->paint-drip#closeOnClickOutside">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Brush Stroke -->
-    <div class="brush-stroke relative h-16 bg-primary/80 rounded-t-sm mb-0" style="clip-path: polygon(0 30%, 2% 0, 8% 40%, 15% 10%, 25% 50%, 35% 5%, 45% 45%, 55% 15%, 65% 40%, 75% 0, 85% 35%, 92% 10%, 98% 45%, 100% 20%, 100% 100%, 0 100%);">
-      <div class="absolute inset-0 flex items-end justify-around px-8 pb-2">
-        <% categories.each do |category| %>
-          <span class="text-white text-sm font-medium"><%= category.name %></span>
-        <% end %>
-      </div>
-    </div>
+    <%
+      drip_width = 60
+      gap_between = (100.0 - (categories.count * 8)) / (categories.count + 1)
+    %>
 
-    <!-- Drips Container -->
-    <div class="drips-container flex justify-around px-8">
+    <!-- Combined Brush Stroke with Drips -->
+    <svg class="w-full" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMin meet">
+      <defs>
+        <!-- Gradient for the paint -->
+        <linearGradient id="paint-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.7;" />
+        </linearGradient>
+
+        <!-- Filter for paint texture -->
+        <filter id="paint-texture" x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+
+      <!-- Main brush stroke band with organic edges -->
+      <path d="M 0,25
+               Q 50,5 100,20
+               Q 200,40 300,15
+               Q 400,35 500,10
+               Q 600,30 700,18
+               Q 800,38 900,12
+               Q 950,28 1000,20
+               L 1000,60
+               Q 950,55 900,62
+               Q 800,58 700,65
+               Q 600,55 500,63
+               Q 400,58 300,65
+               Q 200,57 100,62
+               Q 50,58 0,60
+               Z"
+            fill="url(#paint-gradient)"
+            filter="url(#paint-texture)"/>
+
+      <!-- Drips flowing from the brush stroke -->
+      <% categories.each_with_index do |category, index| %>
+        <%
+          # Calculate x position for this drip
+          x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
+
+          # Calculate drip height based on depth
+          depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
+          min_drip = 80
+          max_drip = 380
+          drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
+
+          # Vary width slightly for organic look
+          drip_w = 28 + (index % 3) * 4
+          half_w = drip_w / 2
+
+          # Control points for the drip curve
+          y_start = 55
+          y_end = y_start + drip_length
+          bulge_y = y_end - 25
+        %>
+
+        <!-- Drip shape -->
+        <g class="drip-group cursor-pointer transition-transform duration-300 hover:scale-105"
+           data-drip-id="<%= category.id %>"
+           data-action="click->paint-drip#toggle">
+
+          <path d="M <%= x_pos - half_w %>,<%= y_start %>
+                   Q <%= x_pos - half_w - 2 %>,<%= y_start + drip_length * 0.3 %> <%= x_pos - half_w + 3 %>,<%= y_start + drip_length * 0.6 %>
+                   Q <%= x_pos - half_w - 1 %>,<%= bulge_y %> <%= x_pos - half_w + 5 %>,<%= bulge_y + 10 %>
+                   Q <%= x_pos %>,<%= y_end + 15 %> <%= x_pos + half_w - 5 %>,<%= bulge_y + 10 %>
+                   Q <%= x_pos + half_w + 1 %>,<%= bulge_y %> <%= x_pos + half_w - 3 %>,<%= y_start + drip_length * 0.6 %>
+                   Q <%= x_pos + half_w + 2 %>,<%= y_start + drip_length * 0.3 %> <%= x_pos + half_w %>,<%= y_start %>
+                   Z"
+                fill="url(#paint-gradient)"
+                filter="url(#paint-texture)"
+                style="opacity: <%= 0.85 + (depth_percentage / 100.0 * 0.15) %>;"/>
+
+          <!-- Category name above the drip -->
+          <text x="<%= x_pos %>" y="35"
+                text-anchor="middle"
+                class="fill-white text-sm font-medium"
+                style="font-size: 14px; font-weight: 500;">
+            <%= category.name %>
+          </text>
+
+          <!-- Engagement icons below the drip tip -->
+          <g transform="translate(<%= x_pos %>, <%= y_end + 35 %>)">
+            <% types = category.engagement_types_present %>
+            <% types.each_with_index do |type, i| %>
+              <% icon_x = (i - (types.length - 1) / 2.0) * 18 %>
+              <text x="<%= icon_x %>" y="0" text-anchor="middle" style="font-size: 14px;">
+                <%= case type
+                    when 'consumed' then '📖'
+                    when 'experimented' then '🧪'
+                    when 'applied' then '🔨'
+                    when 'shared' then '📣'
+                    end %>
+              </text>
+            <% end %>
+          </g>
+        </g>
+      <% end %>
+    </svg>
+
+    <!-- Expanded moments panels (positioned below) -->
+    <div class="drips-details flex justify-around px-8 mt-4">
       <% categories.each do |category| %>
-        <%= render "learning/drip", category: category, max_depth: max_depth %>
+        <div data-drip-id="<%= category.id %>" class="drip-detail-container flex-1 max-w-xs mx-2">
+          <div data-paint-drip-target="moments" class="hidden bg-surface border border-muted/20 rounded-lg p-4 shadow-lg">
+            <h3 class="font-semibold text-text mb-3"><%= category.name %></h3>
+            <div class="space-y-2 max-h-80 overflow-y-auto">
+              <% category.learning_moments.chronological.each do |moment| %>
+                <%= render "learning/droplet", moment: moment %>
+              <% end %>
+            </div>
+          </div>
+        </div>
       <% end %>
     </div>
   </div>
