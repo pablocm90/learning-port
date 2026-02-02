@@ -1,6 +1,12 @@
 <div class="paint-drip-canvas py-16" data-controller="paint-drip" data-action="click@window->paint-drip#closeOnClickOutside">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <svg class="w-full" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMin meet">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
+    <%
+      # Fixed width per category for consistent drip appearance
+      category_width = 100
+      min_canvas_width = 1000
+      canvas_width = [categories.count * category_width + 100, min_canvas_width].max
+    %>
+    <svg class="min-w-full" style="width: <%= canvas_width %>px;" viewBox="0 0 <%= canvas_width %> 480" preserveAspectRatio="xMidYMin meet">
       <defs>
         <!-- Color palette for paint drips - matte colors varying left to right -->
         <%
@@ -19,7 +25,7 @@
         # Generate multiple drips per category for overlap effect
         all_drips = []
         categories.each_with_index do |category, cat_idx|
-          base_x = ((cat_idx + 1) * (1000.0 / (categories.count + 1))).to_i
+          base_x = ((cat_idx + 1) * (canvas_width.to_f / (categories.count + 1))).to_i
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
           base_drip_length = 100 + (depth_percentage / 100.0 * 280)
 
@@ -33,12 +39,12 @@
       %>
 
       <!-- Top paint band -->
-      <rect x="0" y="20" width="1000" height="50" fill="#2D2D2D"/>
+      <rect x="0" y="20" width="<%= canvas_width %>" height="50" fill="#2D2D2D"/>
 
       <!-- Color sections on top band -->
       <% categories.each_with_index do |category, index| %>
         <%
-          section_width = 1000.0 / categories.count
+          section_width = canvas_width.to_f / categories.count
           x_start = index * section_width
           color_idx = index % drip_colors.length
         %>
@@ -80,7 +86,7 @@
       <!-- Category names - on top band -->
       <% categories.each_with_index do |category, index| %>
         <%
-          x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
+          x_pos = ((index + 1) * (canvas_width.to_f / (categories.count + 1))).to_i
         %>
         <text x="<%= x_pos %>" y="50"
               text-anchor="middle"
@@ -92,7 +98,7 @@
       <!-- Learning moment icons along main drips -->
       <% categories.each_with_index do |category, index| %>
         <%
-          x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
+          x_pos = ((index + 1) * (canvas_width.to_f / (categories.count + 1))).to_i
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
           drip_length = 100 + (depth_percentage / 100.0 * 280)
           y_start = 65
