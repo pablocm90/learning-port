@@ -20,66 +20,62 @@
         <% end %>
       </defs>
 
-      <!-- Paint drips - overlapping, matte, varying colors -->
-      <%
-        # Generate multiple drips per category for overlap effect
-        all_drips = []
-        categories.each_with_index do |category, cat_idx|
+      <!-- Top paint band (dark background) -->
+      <rect x="0" y="20" width="<%= canvas_width %>" height="50" fill="#2D2D2D"/>
+
+      <!-- Paint drips per category - narrower color sections with contained drips -->
+      <% categories.each_with_index do |category, cat_idx| %>
+        <%
           base_x = ((cat_idx + 1) * (canvas_width.to_f / (categories.count + 1))).to_i
+          color_idx = cat_idx % drip_colors.length
+          color = drip_colors[color_idx]
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
           base_drip_length = 100 + (depth_percentage / 100.0 * 280)
 
-          # Main drip
-          all_drips << { x: base_x, length: base_drip_length, width: 28, cat_idx: cat_idx, category: category, is_main: true }
-
-          # Secondary drips - kept close to main drip to avoid bleeding into neighbors
-          all_drips << { x: base_x - 18, length: base_drip_length * 0.7, width: 14, cat_idx: cat_idx, category: category, is_main: false }
-          all_drips << { x: base_x + 16, length: base_drip_length * 0.85, width: 16, cat_idx: cat_idx, category: category, is_main: false }
-        end
-      %>
-
-      <!-- Top paint band -->
-      <rect x="0" y="20" width="<%= canvas_width %>" height="50" fill="#2D2D2D"/>
-
-      <!-- Color sections on top band -->
-      <% categories.each_with_index do |category, index| %>
-        <%
-          section_width = canvas_width.to_f / categories.count
-          x_start = index * section_width
-          color_idx = index % drip_colors.length
-        %>
-        <rect x="<%= x_start %>" y="20" width="<%= section_width + 1 %>" height="50"
-              fill="<%= drip_colors[color_idx] %>"/>
-      <% end %>
-
-      <!-- All drips sorted by x for natural overlap -->
-      <% all_drips.sort_by { |d| d[:x] }.each do |drip| %>
-        <%
-          x = drip[:x]
-          drip_length = drip[:length]
-          width = drip[:width]
-          color_idx = drip[:cat_idx] % drip_colors.length
-          color = drip_colors[color_idx]
-
-          y_start = 65
-          y_end = y_start + drip_length
-          bulb_r = width * 0.6
+          # Narrow color section width (all drips fit within this)
+          color_section_width = 70
         %>
 
-        <g class="<%= drip[:is_main] ? 'drip-group cursor-pointer' : '' %>"
-           <%= drip[:is_main] ? "data-drip-id=\"#{drip[:category].id}\" data-action=\"click->paint-drip#toggle\"" : '' %>>
-          <!-- Tapered drip with rounded end -->
-          <path d="M <%= x - width/2 %>,<%= y_start %>
-                   Q <%= x - width/2 %>,<%= y_end - bulb_r * 2 %>
-                     <%= x - bulb_r %>,<%= y_end - bulb_r %>
-                   Q <%= x - bulb_r %>,<%= y_end %>
-                     <%= x %>,<%= y_end + bulb_r * 0.3 %>
-                   Q <%= x + bulb_r %>,<%= y_end %>
-                     <%= x + bulb_r %>,<%= y_end - bulb_r %>
-                   Q <%= x + width/2 %>,<%= y_end - bulb_r * 2 %>
-                     <%= x + width/2 %>,<%= y_start %>
-                   Z"
-                fill="<%= color %>"/>
+        <!-- Color section on top band - narrow, centered on category -->
+        <rect x="<%= base_x - color_section_width/2 %>" y="20"
+              width="<%= color_section_width %>" height="50"
+              fill="<%= color %>"/>
+
+        <!-- Drips - all within the color section bounds -->
+        <%
+          # Drip positions relative to base_x, staying within color_section_width
+          drips = [
+            { offset: -22, length_mult: 0.65, width: 12 },  # left
+            { offset: -8,  length_mult: 0.85, width: 16 },  # left-center
+            { offset: 5,   length_mult: 1.0,  width: 22 },  # main (slightly right of center)
+            { offset: 20,  length_mult: 0.75, width: 14 },  # right
+          ]
+        %>
+
+        <g class="drip-group cursor-pointer"
+           data-drip-id="<%= category.id %>"
+           data-action="click->paint-drip#toggle">
+          <% drips.each do |drip| %>
+            <%
+              x = base_x + drip[:offset]
+              drip_length = base_drip_length * drip[:length_mult]
+              width = drip[:width]
+              y_start = 65
+              y_end = y_start + drip_length
+              bulb_r = width * 0.55
+            %>
+            <path d="M <%= x - width/2 %>,<%= y_start %>
+                     Q <%= x - width/2 %>,<%= y_end - bulb_r * 2 %>
+                       <%= x - bulb_r %>,<%= y_end - bulb_r %>
+                     Q <%= x - bulb_r %>,<%= y_end %>
+                       <%= x %>,<%= y_end + bulb_r * 0.3 %>
+                     Q <%= x + bulb_r %>,<%= y_end %>
+                       <%= x + bulb_r %>,<%= y_end - bulb_r %>
+                     Q <%= x + width/2 %>,<%= y_end - bulb_r * 2 %>
+                       <%= x + width/2 %>,<%= y_start %>
+                     Z"
+                  fill="<%= color %>"/>
+          <% end %>
         </g>
       <% end %>
 
