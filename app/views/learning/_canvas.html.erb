@@ -1,0 +1,19 @@
+<div class="paint-drip-canvas py-16" data-controller="paint-drip" data-action="click@window->paint-drip#closeOnClickOutside">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Brush Stroke -->
+    <div class="brush-stroke relative h-16 bg-primary/80 rounded-t-sm mb-0" style="clip-path: polygon(0 30%, 2% 0, 8% 40%, 15% 10%, 25% 50%, 35% 5%, 45% 45%, 55% 15%, 65% 40%, 75% 0, 85% 35%, 92% 10%, 98% 45%, 100% 20%, 100% 100%, 0 100%);">
+      <div class="absolute inset-0 flex items-end justify-around px-8 pb-2">
+        <% categories.each do |category| %>
+          <span class="text-white text-sm font-medium"><%= category.name %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Drips Container -->
+    <div class="drips-container flex justify-around px-8">
+      <% categories.each do |category| %>
+        <%= render "learning/drip", category: category, max_depth: max_depth %>
+      <% end %>
+    </div>
+  </div>
+</div>
