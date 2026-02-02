@@ -3,77 +3,81 @@
     <defs>
       <linearGradient id="mini-paint-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
-        <stop offset="70%" style="stop-color: var(--theme-primary); stop-opacity: 0.95;" />
-        <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.85;" />
+        <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.9;" />
       </linearGradient>
-      <linearGradient id="mini-gloss" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color: white; stop-opacity: 0.35;" />
-        <stop offset="50%" style="stop-color: white; stop-opacity: 0;" />
-      </linearGradient>
+
+      <!-- Organic edge filter -->
+      <filter id="mini-organic-edge" x="-3%" y="-3%" width="106%" height="106%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
     </defs>
 
-    <!-- Wet brush stroke -->
-    <path d="M 0,10
-             Q 50,18 100,12
-             Q 200,22 300,14
-             Q 350,20 400,15
-             L 400,30
-             Q 350,28 300,32
-             Q 200,30 100,34
-             Q 50,32 0,30
-             Z"
-          fill="url(#mini-paint-gradient)"/>
+    <g filter="url(#mini-organic-edge)">
+      <!-- Brush stroke -->
+      <path d="M -5,8
+               Q 50,18 120,10
+               Q 200,22 280,12
+               Q 350,20 405,14
+               L 405,32
+               Q 350,30 280,35
+               Q 200,32 120,36
+               Q 50,33 -5,35
+               Z"
+            fill="url(#mini-paint-gradient)"/>
 
-    <!-- Brush stroke gloss -->
-    <path d="M 0,13
-             Q 50,19 100,15
-             Q 200,23 300,17
-             Q 350,21 400,18
-             L 400,22
-             Q 350,20 300,23
-             Q 200,22 100,25
-             Q 50,23 0,24
-             Z"
-          fill="url(#mini-gloss)"/>
+      <!-- Drips merging from brush stroke -->
+      <% categories.each_with_index do |category, index| %>
+        <%
+          x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
+          depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
+          min_drip = 45
+          max_drip = 75
+          drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
 
-    <!-- Drips -->
+          # Scaled dimensions
+          merge_w = 22
+          neck_w = 10
+          mid_w = 13
+          blob_w = 16
+
+          y_merge = 22
+          y_exit = 34
+          y_neck = y_exit + 12
+          y_mid = y_exit + drip_length * 0.45
+          y_bulge = y_exit + drip_length * 0.7
+          y_blob_top = y_exit + drip_length - 14
+          y_end = y_exit + drip_length
+
+          x_wobble = (index % 3 - 1) * 2
+        %>
+
+        <path d="M <%= x_pos - merge_w/2 + x_wobble %>,<%= y_merge %>
+                 Q <%= x_pos - merge_w/2 - 2 + x_wobble %>,<%= y_exit %> <%= x_pos - neck_w/2 + x_wobble %>,<%= y_neck %>
+                 Q <%= x_pos - mid_w/2 - 2 + x_wobble %>,<%= y_mid - 12 %> <%= x_pos - mid_w/2 + x_wobble %>,<%= y_mid %>
+                 Q <%= x_pos - mid_w/2 + 1 + x_wobble %>,<%= y_bulge - 6 %> <%= x_pos - blob_w/2 + x_wobble %>,<%= y_bulge %>
+                 Q <%= x_pos - blob_w/2 - 2 + x_wobble %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 2 + x_wobble %>,<%= y_blob_top + 5 %>
+                 Q <%= x_pos - blob_w/3 + x_wobble %>,<%= y_end + 4 %> <%= x_pos + x_wobble %>,<%= y_end + 6 %>
+                 Q <%= x_pos + blob_w/3 + x_wobble %>,<%= y_end + 4 %> <%= x_pos + blob_w/2 - 2 + x_wobble %>,<%= y_blob_top + 5 %>
+                 Q <%= x_pos + blob_w/2 + 2 + x_wobble %>,<%= y_blob_top %> <%= x_pos + blob_w/2 + x_wobble %>,<%= y_bulge %>
+                 Q <%= x_pos + mid_w/2 - 1 + x_wobble %>,<%= y_bulge - 6 %> <%= x_pos + mid_w/2 + x_wobble %>,<%= y_mid %>
+                 Q <%= x_pos + mid_w/2 + 2 + x_wobble %>,<%= y_mid - 12 %> <%= x_pos + neck_w/2 + x_wobble %>,<%= y_neck %>
+                 Q <%= x_pos + merge_w/2 + 2 + x_wobble %>,<%= y_exit %> <%= x_pos + merge_w/2 + x_wobble %>,<%= y_merge %>
+                 Z"
+              fill="url(#mini-paint-gradient)"/>
+      <% end %>
+    </g>
+
+    <!-- Category names outside filter for crisp text -->
     <% categories.each_with_index do |category, index| %>
       <%
         x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
         depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-        min_drip = 40
-        max_drip = 80
+        min_drip = 45
+        max_drip = 75
         drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
-
-        # Scaled dimensions for mini version
-        neck_w = 8
-        mid_w = 12
-        blob_w = 15
-
-        y_start = 28
-        y_neck = y_start + 10
-        y_mid = y_start + drip_length * 0.5
-        y_bulge = y_start + drip_length * 0.75
-        y_blob_top = y_start + drip_length - 12
-        y_end = y_start + drip_length
+        y_end = 34 + drip_length
       %>
-
-      <!-- Drip with rounded blob bottom -->
-      <path d="M <%= x_pos - neck_w/2 %>,<%= y_start %>
-               L <%= x_pos - neck_w/2 %>,<%= y_neck %>
-               Q <%= x_pos - mid_w/2 - 1 %>,<%= y_mid - 8 %> <%= x_pos - mid_w/2 %>,<%= y_mid %>
-               Q <%= x_pos - mid_w/2 + 1 %>,<%= y_bulge - 4 %> <%= x_pos - blob_w/2 %>,<%= y_bulge %>
-               Q <%= x_pos - blob_w/2 - 2 %>,<%= y_blob_top %> <%= x_pos - blob_w/2 + 1 %>,<%= y_blob_top + 4 %>
-               Q <%= x_pos - blob_w/3 %>,<%= y_end + 4 %> <%= x_pos %>,<%= y_end + 6 %>
-               Q <%= x_pos + blob_w/3 %>,<%= y_end + 4 %> <%= x_pos + blob_w/2 - 1 %>,<%= y_blob_top + 4 %>
-               Q <%= x_pos + blob_w/2 + 2 %>,<%= y_blob_top %> <%= x_pos + blob_w/2 %>,<%= y_bulge %>
-               Q <%= x_pos + mid_w/2 - 1 %>,<%= y_bulge - 4 %> <%= x_pos + mid_w/2 %>,<%= y_mid %>
-               Q <%= x_pos + mid_w/2 + 1 %>,<%= y_mid - 8 %> <%= x_pos + neck_w/2 %>,<%= y_neck %>
-               L <%= x_pos + neck_w/2 %>,<%= y_start %>
-               Z"
-            fill="url(#mini-paint-gradient)"/>
-
-      <!-- Category name -->
       <text x="<%= x_pos %>" y="<%= y_end + 18 %>"
             text-anchor="middle"
             class="fill-current text-muted"
