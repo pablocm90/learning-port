@@ -1,0 +1,156 @@
+# Test seed with 12 categories to test paint drip scalability
+- name: Agile
+  position: 1
+  moments:
+    - engagement_type: consumed
+      description: Read Agile Manifesto
+      occurred_at: 2020-01-15
+    - engagement_type: experimented
+      description: First sprint planning
+      occurred_at: 2020-03-01
+    - engagement_type: applied
+      description: Led retrospectives
+      occurred_at: 2021-06-15
+
+- name: Collaborative Coding
+  position: 2
+  moments:
+    - engagement_type: consumed
+      description: Read XP Explained
+      occurred_at: 2021-02-10
+    - engagement_type: experimented
+      description: First pairing session
+      occurred_at: 2021-03-15
+    - engagement_type: applied
+      description: Daily ensemble programming
+      occurred_at: 2022-01-01
+    - engagement_type: shared
+      description: Facilitated ensemble workshop
+      occurred_at: 2023-06-01
+
+- name: TDD
+  position: 3
+  moments:
+    - engagement_type: consumed
+      description: Watched TDD videos
+      occurred_at: 2019-06-01
+    - engagement_type: experimented
+      description: First red-green-refactor
+      occurred_at: 2019-07-01
+    - engagement_type: applied
+      description: TDD as default practice
+      occurred_at: 2020-01-01
+
+- name: Ruby
+  position: 4
+  moments:
+    - engagement_type: consumed
+      description: Completed Ruby Koans
+      occurred_at: 2018-03-01
+    - engagement_type: experimented
+      description: Built first CLI tool
+      occurred_at: 2018-05-15
+    - engagement_type: applied
+      description: Production Rails apps
+      occurred_at: 2019-01-01
+    - engagement_type: shared
+      description: Mentored junior devs
+      occurred_at: 2022-06-01
+
+- name: JavaScript
+  position: 5
+  moments:
+    - engagement_type: consumed
+      description: Read You Don't Know JS
+      occurred_at: 2017-01-15
+    - engagement_type: experimented
+      description: Built interactive UI
+      occurred_at: 2017-04-01
+    - engagement_type: applied
+      description: Full-stack projects
+      occurred_at: 2018-06-01
+
+- name: DevOps
+  position: 6
+  moments:
+    - engagement_type: consumed
+      description: Read Phoenix Project
+      occurred_at: 2020-08-01
+    - engagement_type: experimented
+      description: Set up CI/CD pipeline
+      occurred_at: 2021-01-15
+    - engagement_type: applied
+      description: Infrastructure as Code
+      occurred_at: 2022-03-01
+
+- name: System Design
+  position: 7
+  moments:
+    - engagement_type: consumed
+      description: Read DDIA book
+      occurred_at: 2021-06-01
+    - engagement_type: experimented
+      description: Designed microservice
+      occurred_at: 2022-02-01
+
+- name: Machine Learning
+  position: 8
+  moments:
+    - engagement_type: consumed
+      description: Completed ML course
+      occurred_at: 2023-01-15
+    - engagement_type: experimented
+      description: Built classifier
+      occurred_at: 2023-04-01
+    - engagement_type: applied
+      description: Production ML pipeline
+      occurred_at: 2024-01-01
+    - engagement_type: shared
+      description: Internal ML workshop
+      occurred_at: 2024-06-01
+
+- name: Kubernetes
+  position: 9
+  moments:
+    - engagement_type: consumed
+      description: K8s the Hard Way
+      occurred_at: 2022-05-01
+    - engagement_type: experimented
+      description: Local cluster setup
+      occurred_at: 2022-07-15
+
+- name: GraphQL
+  position: 10
+  moments:
+    - engagement_type: consumed
+      description: Read GraphQL spec
+      occurred_at: 2021-09-01
+    - engagement_type: experimented
+      description: Built first API
+      occurred_at: 2021-11-15
+    - engagement_type: applied
+      description: Production GraphQL
+      occurred_at: 2022-08-01
+
+- name: Security
+  position: 11
+  moments:
+    - engagement_type: consumed
+      description: OWASP Top 10
+      occurred_at: 2020-02-01
+    - engagement_type: experimented
+      description: Penetration testing lab
+      occurred_at: 2020-06-15
+    - engagement_type: applied
+      description: Security audit lead
+      occurred_at: 2023-03-01
+
+- name: Rust
+  position: 12
+  moments:
+    - engagement_type: consumed
+      description: Read The Rust Book
+      occurred_at: 2024-02-01
+    - engagement_type: experimented
+      description: First CLI in Rust
+      occurred_at: 2024-05-15
