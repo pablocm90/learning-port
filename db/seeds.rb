@@ -101,4 +101,40 @@ else
   puts "  -> No podcast_episodes.yml found, skipping..."
 end
 
+# =============================================================================
+# Categories and Learning Moments from YAML
+# =============================================================================
+puts "\nSeeding categories and learning moments from YAML..."
+
+categories_file = Rails.root.join("db/seeds/categories.yml")
+if File.exist?(categories_file)
+  categories_data = YAML.safe_load_file(categories_file, permitted_classes: [Date, Time, DateTime]) || []
+  created_categories = 0
+  created_moments = 0
+
+  categories_data.each do |cat_data|
+    category = Category.find_or_create_by!(name: cat_data["name"]) do |c|
+      c.position = cat_data["position"]
+    end
+    created_categories += 1 if category.previously_new_record?
+
+    cat_data["moments"]&.each do |moment_data|
+      moment = category.learning_moments.find_or_create_by!(
+        description: moment_data["description"],
+        occurred_at: moment_data["occurred_at"]
+      ) do |m|
+        m.engagement_type = moment_data["engagement_type"]
+        m.url = moment_data["url"]
+      end
+      created_moments += 1 if moment.previously_new_record?
+    end
+    puts "  -> Loaded category: #{category.name} with #{cat_data['moments']&.size || 0} moments"
+  end
+
+  puts "  Categories: #{created_categories} created, Learning moments: #{created_moments} created"
+  puts "  Total: #{Category.count} categories with #{LearningMoment.count} learning moments"
+else
+  puts "  -> No categories.yml found, skipping..."
+end
+
 puts "\nSeeding complete!"

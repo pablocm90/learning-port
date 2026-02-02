@@ -1,0 +1,42 @@
+- name: Agile
+  position: 1
+  moments:
+    - engagement_type: consumed
+      description: Read Agile Manifesto
+      occurred_at: 2020-01-15
+      url: https://agilemanifesto.org
+    - engagement_type: experimented
+      description: First sprint planning session
+      occurred_at: 2020-03-01
+    - engagement_type: applied
+      description: Led retrospectives for 6 months
+      occurred_at: 2021-06-15
+
+- name: Collaborative Coding
+  position: 2
+  moments:
+    - engagement_type: consumed
+      description: Read Extreme Programming Explained
+      occurred_at: 2021-02-10
+    - engagement_type: experimented
+      description: First pair programming session
+      occurred_at: 2021-03-15
+    - engagement_type: applied
+      description: Regular ensemble programming at work
+      occurred_at: 2022-01-01
+    - engagement_type: shared
+      description: Facilitated ensemble session for new team
+      occurred_at: 2023-06-01
+
+- name: TDD
+  position: 3
+  moments:
+    - engagement_type: consumed
+      description: "Watched Uncle Bob's TDD videos"
+      occurred_at: 2019-06-01
+    - engagement_type: experimented
+      description: First red-green-refactor cycle
+      occurred_at: 2019-07-01
+    - engagement_type: applied
+      description: TDD as default practice
+      occurred_at: 2020-01-01
