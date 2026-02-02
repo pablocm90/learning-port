@@ -20,10 +20,7 @@
         <% end %>
       </defs>
 
-      <!-- Top paint band (dark background) -->
-      <rect x="0" y="20" width="<%= canvas_width %>" height="50" fill="#2D2D2D"/>
-
-      <!-- Paint drips per category - narrower color sections with contained drips -->
+      <!-- Paint drips per category - color sections touch each other -->
       <% categories.each_with_index do |category, cat_idx| %>
         <%
           base_x = ((cat_idx + 1) * (canvas_width.to_f / (categories.count + 1))).to_i
@@ -32,13 +29,16 @@
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
           base_drip_length = 100 + (depth_percentage / 100.0 * 280)
 
-          # Narrow color section width (all drips fit within this)
-          color_section_width = 70
+          # Color section spans from midpoint to previous category to midpoint to next
+          spacing = canvas_width.to_f / (categories.count + 1)
+          section_start = cat_idx == 0 ? 0 : (base_x - spacing / 2).to_i
+          section_end = cat_idx == categories.count - 1 ? canvas_width : (base_x + spacing / 2).to_i
+          section_width = section_end - section_start
         %>
 
-        <!-- Color section on top band - narrow, centered on category -->
-        <rect x="<%= base_x - color_section_width/2 %>" y="20"
-              width="<%= color_section_width %>" height="50"
+        <!-- Color section on top band - touching adjacent sections -->
+        <rect x="<%= section_start %>" y="20"
+              width="<%= section_width %>" height="50"
               fill="<%= color %>"/>
 
         <!-- Drips - all within the color section bounds -->
