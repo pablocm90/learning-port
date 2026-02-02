@@ -3,7 +3,7 @@ module Admin
     before_action :authenticate_writer!
 
     def index
-      @learning_items = LearningItem.ordered
+      @categories = Category.ordered.includes(:learning_moments)
       @podcast_episodes = PodcastEpisode.newest_first
     end
   end
