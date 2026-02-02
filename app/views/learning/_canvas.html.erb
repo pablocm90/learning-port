@@ -9,23 +9,38 @@
         </linearGradient>
 
         <!--
-          PAINT TEXTURE FILTER - preserves color vibrancy
+          REALISTIC PAINT FILTER
+          - Texture grain from turbulence
+          - 3D depth from diffuse lighting
+          - Glossy shine from specular lighting
+          - Saturated to keep color vibrant
         -->
         <filter id="paint-effect" x="-5%" y="-5%" width="110%" height="110%">
-          <!-- Noise for texture -->
-          <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed="12" result="noise"/>
+          <!-- 1. Generate noise for paint texture -->
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="15" result="noise"/>
 
-          <!-- Subtle 3D lighting - lower intensity to preserve color -->
-          <feDiffuseLighting in="noise" lighting-color="#ffffff" surfaceScale="0.8" diffuseConstant="1.2" result="light">
-            <feDistantLight azimuth="135" elevation="65"/>
+          <!-- 2. Create 3D surface lighting -->
+          <feDiffuseLighting in="noise" lighting-color="#ffffff" surfaceScale="1.5" diffuseConstant="0.8" result="diffuse">
+            <feDistantLight azimuth="135" elevation="50"/>
           </feDiffuseLighting>
 
-          <!-- Composite: overlay light on original to add texture while keeping color -->
-          <feComposite in="SourceGraphic" in2="light" operator="arithmetic" k1="0" k2="0.85" k3="0.15" k4="0" result="textured"/>
+          <!-- 3. Add glossy specular highlights -->
+          <feSpecularLighting in="noise" specularConstant="0.7" specularExponent="20" lighting-color="#ffffff" surfaceScale="1.2" result="specular">
+            <feDistantLight azimuth="135" elevation="60"/>
+          </feSpecularLighting>
 
-          <!-- Organic edge wobble -->
-          <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="2" seed="3" result="edgeNoise"/>
-          <feDisplacementMap in="textured" in2="edgeNoise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+          <!-- 4. Blend diffuse lighting with original (multiply adds depth) -->
+          <feBlend in="SourceGraphic" in2="diffuse" mode="multiply" result="textured"/>
+
+          <!-- 5. Boost saturation to counteract darkening from multiply -->
+          <feColorMatrix in="textured" type="saturate" values="1.3" result="saturated"/>
+
+          <!-- 6. Add specular highlights on top -->
+          <feBlend in="saturated" in2="specular" mode="screen" result="glossy"/>
+
+          <!-- 7. Organic edge distortion -->
+          <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" seed="5" result="edgeNoise"/>
+          <feDisplacementMap in="glossy" in2="edgeNoise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
 
         <!-- Bubble style -->
