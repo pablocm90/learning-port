@@ -2,60 +2,125 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <svg class="w-full" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMin meet">
       <defs>
-        <!-- Simple drop shadow for depth -->
-        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-          <feDropShadow dx="2" dy="3" stdDeviation="2" flood-opacity="0.2"/>
+        <!-- Glossy slime gradient -->
+        <linearGradient id="slime-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
+          <stop offset="40%" style="stop-color: var(--theme-primary); stop-opacity: 1;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.85;" />
+        </linearGradient>
+
+        <!-- Highlight for glossy effect -->
+        <linearGradient id="slime-highlight" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color: white; stop-opacity: 0.4;" />
+          <stop offset="40%" style="stop-color: white; stop-opacity: 0.1;" />
+          <stop offset="100%" style="stop-color: white; stop-opacity: 0;" />
+        </linearGradient>
+
+        <!-- Subtle shadow -->
+        <filter id="goo-shadow" x="-10%" y="-10%" width="120%" height="130%">
+          <feDropShadow dx="3" dy="4" stdDeviation="3" flood-opacity="0.25"/>
         </filter>
 
         <!-- Bubble style -->
         <radialGradient id="bubble-fill" cx="35%" cy="35%">
-          <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 0.4;" />
-          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.7;" />
+          <stop offset="0%" style="stop-color: var(--theme-primary); stop-opacity: 0.3;" />
+          <stop offset="100%" style="stop-color: var(--theme-primary); stop-opacity: 0.6;" />
         </radialGradient>
       </defs>
 
-      <!-- Clean paint group with subtle shadow -->
-      <g filter="url(#shadow)">
-        <!-- Brush stroke band - flat top, slightly wavy bottom, tapered end -->
-        <path d="M 0,25
-                 L 880,25
-                 Q 940,28 970,40
-                 Q 985,55 980,70
-                 L 0,70
+      <!-- Goo/slime group -->
+      <g filter="url(#goo-shadow)">
+        <!-- Top goo band - blobby, uneven bottom edge -->
+        <path d="M 0,20
+                 L 900,20
+                 Q 950,20 975,35
+                 Q 990,50 985,70
+                 Q 970,68 940,75
+                 Q 880,70 820,80
+                 Q 750,72 680,82
+                 Q 600,74 520,84
+                 Q 440,76 360,85
+                 Q 280,78 200,86
+                 Q 120,80 60,85
+                 Q 20,82 0,78
                  Z"
-              fill="var(--theme-primary)"/>
+              fill="url(#slime-gradient)"/>
 
-        <!-- Drips - tapered shape: wide at top, narrow droplet at bottom -->
+        <!-- Highlight on top band -->
+        <path d="M 10,25
+                 L 850,25
+                 Q 900,25 920,32
+                 Q 890,30 800,35
+                 Q 600,32 400,38
+                 Q 200,34 10,40
+                 Z"
+              fill="url(#slime-highlight)"/>
+
+        <!-- Slime drips - stretchy with blobby ends -->
         <% categories.each_with_index do |category, index| %>
           <%
             x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
             depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-            min_drip = 120
-            max_drip = 350
+            min_drip = 130
+            max_drip = 340
             drip_length = min_drip + (depth_percentage / 100.0 * (max_drip - min_drip))
 
-            # Tapered widths - wide at top, small droplet at bottom
-            top_w = 40
-            droplet_r = 8
+            # Slime drip dimensions - wide pool at top, stretchy middle, blob at bottom
+            pool_w = 50 + (index % 2) * 10
+            stretch_w = 12 + (index % 3) * 3
+            blob_r = 18 + (index % 2) * 4
 
-            y_start = 65
-            y_end = y_start + drip_length
+            y_pool = 75 + (index % 3) * 5
+            y_stretch_start = y_pool + 30
+            y_blob = y_pool + drip_length
+
+            # Slight x wobble for organic feel
+            x_wobble = (index % 3 - 1) * 8
+            x = x_pos + x_wobble
           %>
 
           <g class="drip-group cursor-pointer"
              data-drip-id="<%= category.id %>"
              data-action="click->paint-drip#toggle">
 
-            <!-- Tapered drip: wide at top, curves inward to small droplet -->
-            <path d="M <%= x_pos - top_w/2 %>,<%= y_start %>
-                     Q <%= x_pos - top_w/3 %>,<%= y_start + drip_length * 0.4 %>
-                       <%= x_pos - droplet_r %>,<%= y_end - droplet_r * 2 %>
-                     A <%= droplet_r %> <%= droplet_r %> 0 1 0
-                       <%= x_pos + droplet_r %>,<%= y_end - droplet_r * 2 %>
-                     Q <%= x_pos + top_w/3 %>,<%= y_start + drip_length * 0.4 %>
-                       <%= x_pos + top_w/2 %>,<%= y_start %>
+            <!-- Slime drip: pool → stretchy neck → blob -->
+            <path d="M <%= x - pool_w/2 %>,<%= y_pool - 10 %>
+                     Q <%= x - pool_w/2 - 5 %>,<%= y_pool + 10 %>
+                       <%= x - stretch_w/2 - 5 %>,<%= y_stretch_start %>
+                     Q <%= x - stretch_w/2 - 3 %>,<%= y_blob - blob_r - 20 %>
+                       <%= x - stretch_w/2 %>,<%= y_blob - blob_r %>
+                     Q <%= x - stretch_w/2 - 2 %>,<%= y_blob - blob_r/2 %>
+                       <%= x - blob_r %>,<%= y_blob %>
+                     Q <%= x - blob_r - 5 %>,<%= y_blob + blob_r * 0.8 %>
+                       <%= x %>,<%= y_blob + blob_r %>
+                     Q <%= x + blob_r + 5 %>,<%= y_blob + blob_r * 0.8 %>
+                       <%= x + blob_r %>,<%= y_blob %>
+                     Q <%= x + stretch_w/2 + 2 %>,<%= y_blob - blob_r/2 %>
+                       <%= x + stretch_w/2 %>,<%= y_blob - blob_r %>
+                     Q <%= x + stretch_w/2 + 3 %>,<%= y_blob - blob_r - 20 %>
+                       <%= x + stretch_w/2 + 5 %>,<%= y_stretch_start %>
+                     Q <%= x + pool_w/2 + 5 %>,<%= y_pool + 10 %>
+                       <%= x + pool_w/2 %>,<%= y_pool - 10 %>
                      Z"
-                  fill="var(--theme-primary)"/>
+                  fill="url(#slime-gradient)"/>
+
+            <!-- Glossy highlight on drip -->
+            <path d="M <%= x - pool_w/2 + 8 %>,<%= y_pool - 5 %>
+                     Q <%= x - pool_w/3 %>,<%= y_pool + 15 %>
+                       <%= x - stretch_w/2 + 2 %>,<%= y_stretch_start + 10 %>
+                     Q <%= x - stretch_w/3 %>,<%= y_blob - blob_r - 30 %>
+                       <%= x - 4 %>,<%= y_blob - blob_r + 5 %>
+                     L <%= x - 2 %>,<%= y_stretch_start + 20 %>
+                     Q <%= x - pool_w/4 %>,<%= y_pool + 5 %>
+                       <%= x - pool_w/2 + 8 %>,<%= y_pool - 5 %>
+                     Z"
+                  fill="url(#slime-highlight)"
+                  style="opacity: 0.6;"/>
+
+            <!-- Blob highlight -->
+            <ellipse cx="<%= x - blob_r/3 %>" cy="<%= y_blob - blob_r/4 %>"
+                     rx="<%= blob_r/3 %>" ry="<%= blob_r/4 %>"
+                     fill="white" opacity="0.25"/>
           </g>
         <% end %>
       </g>
@@ -67,7 +132,7 @@
         %>
         <text x="<%= x_pos %>" y="52"
               text-anchor="middle"
-              style="font-size: 14px; font-weight: 600; fill: white;">
+              style="font-size: 14px; font-weight: 600; fill: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
           <%= category.name %>
         </text>
       <% end %>
@@ -76,9 +141,12 @@
       <% categories.each_with_index do |category, index| %>
         <%
           x_pos = ((index + 1) * (1000.0 / (categories.count + 1))).to_i
+          x_wobble = (index % 3 - 1) * 8
+          x = x_pos + x_wobble
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-          drip_length = 120 + (depth_percentage / 100.0 * 230)
-          y_start = 65
+          drip_length = 130 + (depth_percentage / 100.0 * 210)
+          y_pool = 75 + (index % 3) * 5
+          y_stretch_start = y_pool + 30
           moments = category.learning_moments.chronological.to_a
           moment_count = moments.count
         %>
@@ -88,15 +156,15 @@
           <% moments.each_with_index do |moment, m_idx| %>
             <%
               progress = moment_count > 1 ? m_idx.to_f / (moment_count - 1) : 0.5
-              bubble_y = y_start + 30 + (progress * usable_length)
-              bubble_r = 14
+              bubble_y = y_stretch_start + 20 + (progress * usable_length)
+              bubble_r = 13
             %>
-            <circle cx="<%= x_pos %>" cy="<%= bubble_y %>" r="<%= bubble_r %>"
+            <circle cx="<%= x %>" cy="<%= bubble_y %>" r="<%= bubble_r %>"
                     fill="url(#bubble-fill)"/>
-            <text x="<%= x_pos %>" y="<%= bubble_y + 1 %>"
+            <text x="<%= x %>" y="<%= bubble_y + 1 %>"
                   text-anchor="middle"
                   dominant-baseline="central"
-                  style="font-size: 14px;">
+                  style="font-size: 13px;">
               <%= case moment.engagement_type
                   when 'consumed' then '📖'
                   when 'experimented' then '🧪'
