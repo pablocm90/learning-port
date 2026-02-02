@@ -1,0 +1,40 @@
+<div class="paint-drip-mini">
+  <!-- Mini Brush Stroke -->
+  <div class="brush-stroke-mini relative h-10 bg-primary/80 rounded-t-sm mb-0" style="clip-path: polygon(0 30%, 5% 0, 15% 50%, 30% 10%, 50% 45%, 70% 5%, 85% 40%, 95% 15%, 100% 35%, 100% 100%, 0 100%);">
+    <div class="absolute inset-0 flex items-end justify-around px-4 pb-1">
+      <% categories.each do |category| %>
+        <span class="text-white text-xs font-medium truncate max-w-[80px]"><%= category.name %></span>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Mini Drips -->
+  <div class="drips-container flex justify-around px-4">
+    <% categories.each do |category| %>
+      <%
+        depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
+        min_height = 30
+        max_height = 100
+        drip_height = min_height + (depth_percentage / 100.0 * (max_height - min_height))
+      %>
+      <div class="drip-mini flex flex-col items-center">
+        <svg viewBox="0 0 32 100" preserveAspectRatio="none" style="width: 32px; height: <%= drip_height.to_i %>px;">
+          <path d="M 0,0 L 32,0 L 30,85 Q 28,95 24,98 Q 16,102 8,98 Q 4,95 2,85 Z"
+                fill="var(--color-primary)" fill-opacity="0.7" />
+        </svg>
+        <div class="flex gap-0.5 mt-1">
+          <% category.engagement_types_present.first(3).each do |type| %>
+            <span class="text-[10px] opacity-70">
+              <%= case type
+                  when 'consumed' then '📖'
+                  when 'experimented' then '🧪'
+                  when 'applied' then '🔨'
+                  when 'shared' then '📣'
+                  end %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
