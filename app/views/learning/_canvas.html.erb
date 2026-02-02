@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
     <%
       # Fixed width per category for consistent drip appearance
-      category_width = 100
+      category_width = 120
       min_canvas_width = 1000
       canvas_width = [categories.count * category_width + 100, min_canvas_width].max
     %>
@@ -32,9 +32,9 @@
           # Main drip
           all_drips << { x: base_x, length: base_drip_length, width: 28, cat_idx: cat_idx, category: category, is_main: true }
 
-          # Secondary drips for overlap effect
-          all_drips << { x: base_x - 22, length: base_drip_length * 0.7, width: 18, cat_idx: cat_idx, category: category, is_main: false }
-          all_drips << { x: base_x + 20, length: base_drip_length * 0.85, width: 20, cat_idx: cat_idx, category: category, is_main: false }
+          # Secondary drips - kept close to main drip to avoid bleeding into neighbors
+          all_drips << { x: base_x - 18, length: base_drip_length * 0.7, width: 14, cat_idx: cat_idx, category: category, is_main: false }
+          all_drips << { x: base_x + 16, length: base_drip_length * 0.85, width: 16, cat_idx: cat_idx, category: category, is_main: false }
         end
       %>
 
