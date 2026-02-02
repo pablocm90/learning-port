@@ -1,105 +1,67 @@
 <%= link_to learning_portfolio_path, class: "block hover:opacity-90 transition" do %>
   <svg class="w-full" viewBox="0 0 400 120" preserveAspectRatio="xMidYMin meet">
-    <defs>
-      <!-- Glossy slime gradient - bright slime green -->
-      <linearGradient id="mini-slime-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color: #22C55E; stop-opacity: 1;" />
-        <stop offset="40%" style="stop-color: #22C55E; stop-opacity: 1;" />
-        <stop offset="100%" style="stop-color: #16A34A; stop-opacity: 0.9;" />
-      </linearGradient>
+    <%
+      drip_colors = ['#E85D75', '#F97316', '#FBBF24', '#22C55E', '#14B8A6', '#3B82F6', '#8B5CF6']
+    %>
 
-      <!-- Highlight for glossy effect -->
-      <linearGradient id="mini-slime-highlight" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color: white; stop-opacity: 0.35;" />
-        <stop offset="40%" style="stop-color: white; stop-opacity: 0.1;" />
-        <stop offset="100%" style="stop-color: white; stop-opacity: 0;" />
-      </linearGradient>
+    <!-- Top paint band with color sections -->
+    <% categories.each_with_index do |category, index| %>
+      <%
+        section_width = 400.0 / categories.count
+        x_start = index * section_width
+        color_idx = index % drip_colors.length
+      %>
+      <rect x="<%= x_start %>" y="8" width="<%= section_width + 1 %>" height="20"
+            fill="<%= drip_colors[color_idx] %>"/>
+    <% end %>
 
-      <filter id="mini-shadow" x="-10%" y="-10%" width="120%" height="130%">
-        <feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/>
-      </filter>
-    </defs>
+    <!-- Paint drips - multiple per category for overlap -->
+    <%
+      all_drips = []
+      categories.each_with_index do |category, cat_idx|
+        base_x = ((cat_idx + 1) * (400.0 / (categories.count + 1))).to_i
+        depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
+        base_drip_length = 35 + (depth_percentage / 100.0 * 35)
 
-    <g filter="url(#mini-shadow)">
-      <!-- Top goo band - blobby bottom edge -->
-      <path d="M 0,8
-               L 360,8
-               Q 380,8 390,14
-               Q 396,20 394,28
-               Q 380,27 350,30
-               Q 280,28 200,32
-               Q 120,29 60,33
-               Q 20,31 0,30
+        all_drips << { x: base_x, length: base_drip_length, width: 12, cat_idx: cat_idx }
+        all_drips << { x: base_x - 10, length: base_drip_length * 0.65, width: 7, cat_idx: cat_idx }
+        all_drips << { x: base_x + 9, length: base_drip_length * 0.8, width: 8, cat_idx: cat_idx }
+      end
+    %>
+
+    <% all_drips.sort_by { |d| d[:x] }.each do |drip| %>
+      <%
+        x = drip[:x]
+        drip_length = drip[:length]
+        width = drip[:width]
+        color = drip_colors[drip[:cat_idx] % drip_colors.length]
+
+        y_start = 26
+        y_end = y_start + drip_length
+        bulb_r = width * 0.55
+      %>
+      <path d="M <%= x - width/2 %>,<%= y_start %>
+               Q <%= x - width/2 %>,<%= y_end - bulb_r * 2 %>
+                 <%= x - bulb_r %>,<%= y_end - bulb_r %>
+               Q <%= x - bulb_r %>,<%= y_end %>
+                 <%= x %>,<%= y_end + bulb_r * 0.3 %>
+               Q <%= x + bulb_r %>,<%= y_end %>
+                 <%= x + bulb_r %>,<%= y_end - bulb_r %>
+               Q <%= x + width/2 %>,<%= y_end - bulb_r * 2 %>
+                 <%= x + width/2 %>,<%= y_start %>
                Z"
-            fill="url(#mini-slime-gradient)"/>
-
-      <!-- Highlight on top band -->
-      <path d="M 4,10
-               L 340,10
-               Q 360,10 370,13
-               Q 350,12 280,14
-               Q 140,12 4,16
-               Z"
-            fill="url(#mini-slime-highlight)"/>
-
-      <!-- Slime drips -->
-      <% categories.each_with_index do |category, index| %>
-        <%
-          x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
-          depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-          drip_length = 35 + (depth_percentage / 100.0 * 30)
-
-          # Scaled down slime dimensions
-          pool_w = 20 + (index % 2) * 4
-          stretch_w = 5 + (index % 3)
-          blob_r = 7 + (index % 2) * 2
-
-          y_pool = 28 + (index % 3) * 2
-          y_stretch_start = y_pool + 12
-          y_blob = y_pool + drip_length
-
-          x_wobble = (index % 3 - 1) * 3
-          x = x_pos + x_wobble
-        %>
-
-        <!-- Slime drip: pool → stretchy neck → blob -->
-        <path d="M <%= x - pool_w/2 %>,<%= y_pool - 4 %>
-                 Q <%= x - pool_w/2 - 2 %>,<%= y_pool + 4 %>
-                   <%= x - stretch_w/2 - 2 %>,<%= y_stretch_start %>
-                 Q <%= x - stretch_w/2 - 1 %>,<%= y_blob - blob_r - 8 %>
-                   <%= x - stretch_w/2 %>,<%= y_blob - blob_r %>
-                 Q <%= x - stretch_w/2 - 1 %>,<%= y_blob - blob_r/2 %>
-                   <%= x - blob_r %>,<%= y_blob %>
-                 Q <%= x - blob_r - 2 %>,<%= y_blob + blob_r * 0.8 %>
-                   <%= x %>,<%= y_blob + blob_r %>
-                 Q <%= x + blob_r + 2 %>,<%= y_blob + blob_r * 0.8 %>
-                   <%= x + blob_r %>,<%= y_blob %>
-                 Q <%= x + stretch_w/2 + 1 %>,<%= y_blob - blob_r/2 %>
-                   <%= x + stretch_w/2 %>,<%= y_blob - blob_r %>
-                 Q <%= x + stretch_w/2 + 1 %>,<%= y_blob - blob_r - 8 %>
-                   <%= x + stretch_w/2 + 2 %>,<%= y_stretch_start %>
-                 Q <%= x + pool_w/2 + 2 %>,<%= y_pool + 4 %>
-                   <%= x + pool_w/2 %>,<%= y_pool - 4 %>
-                 Z"
-              fill="url(#mini-slime-gradient)"/>
-
-        <!-- Blob highlight -->
-        <ellipse cx="<%= x - blob_r/3 %>" cy="<%= y_blob - blob_r/4 %>"
-                 rx="<%= blob_r/4 %>" ry="<%= blob_r/5 %>"
-                 fill="white" opacity="0.2"/>
-      <% end %>
-    </g>
+            fill="<%= color %>"/>
+    <% end %>
 
     <!-- Category names -->
     <% categories.each_with_index do |category, index| %>
       <%
         x_pos = ((index + 1) * (400.0 / (categories.count + 1))).to_i
         depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-        drip_length = 35 + (depth_percentage / 100.0 * 30)
-        blob_r = 7 + (index % 2) * 2
-        y_blob = 28 + (index % 3) * 2 + drip_length
+        drip_length = 35 + (depth_percentage / 100.0 * 35)
+        y_end = 26 + drip_length
       %>
-      <text x="<%= x_pos %>" y="<%= y_blob + blob_r + 12 %>"
+      <text x="<%= x_pos %>" y="<%= y_end + 16 %>"
             text-anchor="middle"
             class="fill-current text-muted"
             style="font-size: 9px; font-weight: 500;">
