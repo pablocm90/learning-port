@@ -61,17 +61,32 @@ else
 end
 
 # =============================================================================
-# Podcast Episodes from YAML
+# Podcast Episodes and Categories from YAML
 # =============================================================================
-puts "\nSeeding podcast episodes from YAML..."
+puts "\nSeeding podcast episodes and categories from YAML..."
 
-podcast_episodes_path = Rails.root.join('db/seeds/podcast_episodes.yml')
-if File.exist?(podcast_episodes_path)
-  podcast_episodes = YAML.safe_load_file(podcast_episodes_path, permitted_classes: [Date, Time, DateTime]) || []
-  created_count = 0
-  updated_count = 0
+podcast_data_path = Rails.root.join('db/seeds/podcast_episodes.yml')
+if File.exist?(podcast_data_path)
+  podcast_data = YAML.safe_load_file(podcast_data_path, permitted_classes: [Date, Time, DateTime]) || {}
 
-  podcast_episodes.each do |episode_data|
+  # Seed podcast categories
+  categories_data = podcast_data['categories'] || []
+  created_categories = 0
+
+  categories_data.each do |cat_data|
+    cat = PodcastCategory.find_or_create_by!(name: cat_data['name']) do |c|
+      c.position = cat_data['position']
+    end
+    created_categories += 1 if cat.previously_new_record?
+  end
+  puts "  Podcast categories: #{created_categories} created (#{PodcastCategory.count} total)"
+
+  # Seed podcast episodes
+  episodes_data = podcast_data['episodes'] || []
+  created_episodes = 0
+  updated_episodes = 0
+
+  episodes_data.each do |episode_data|
     episode = PodcastEpisode.find_or_initialize_by(episode_number: episode_data['episode_number'])
     was_new = episode.new_record?
 
@@ -84,11 +99,16 @@ if File.exist?(podcast_episodes_path)
     )
 
     if episode.save
+      # Assign categories
+      category_names = episode_data['categories'] || []
+      categories = PodcastCategory.where(name: category_names)
+      episode.podcast_categories = categories
+
       if was_new
-        created_count += 1
+        created_episodes += 1
         puts "  -> Created: Episode #{episode.episode_number} - #{episode.title}"
       else
-        updated_count += 1
+        updated_episodes += 1
         puts "  -> Updated: Episode #{episode.episode_number} - #{episode.title}"
       end
     else
@@ -96,7 +116,7 @@ if File.exist?(podcast_episodes_path)
     end
   end
 
-  puts "  Podcast episodes: #{created_count} created, #{updated_count} updated"
+  puts "  Podcast episodes: #{created_episodes} created, #{updated_episodes} updated"
 else
   puts "  -> No podcast_episodes.yml found, skipping..."
 end

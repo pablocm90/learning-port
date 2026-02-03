@@ -1,9 +1,210 @@
-# Add your episodes here
-# - title: "Episode Title"
-#   episode_number: 1
-#   description: "Episode description"
-#   published_at: 2024-01-01
-#   embed_code: '<iframe src="..."></iframe>'
-#   external_links:
-#     spotify: "https://spotify.com/..."
-#     apple: "https://podcasts.apple.com/..."
+# Podcast categories
+categories:
+  - name: Software Practices
+    position: 1
+  - name: Teams & Collaboration
+    position: 2
+  - name: Career & Learning
+    position: 3
+  - name: Tech Meets Business
+    position: 4
+  - name: Technology Deep Dives
+    position: 5
+
+# Podcast episodes
+episodes:
+  - title: "On Power and Responsibility"
+    episode_number: 1
+    published_at: 2024-05-08
+    description: "Software engineer power and ethical responsibilities in technology development."
+    categories:
+      - Career & Learning
+
+  - title: "On Continuous Learning"
+    episode_number: 2
+    published_at: 2024-03-28
+    description: "Continuous learning in tech industry contexts and professional development."
+    categories:
+      - Career & Learning
+
+  - title: "On Solo-preneurship"
+    episode_number: 3
+    published_at: 2024-06-17
+    description: "Solo-preneurship journey experiences with projects like Zero Config Rails and Proggy.io."
+    categories:
+      - Tech Meets Business
+
+  - title: "On Being a Generalist"
+    episode_number: 4
+    published_at: 2024-09-27
+    description: "Generalist identity, thriving amid specialization pressures, and career journey lessons."
+    categories:
+      - Career & Learning
+
+  - title: "On Sales and Tech"
+    episode_number: 5
+    published_at: 2024-10-12
+    description: "Sales-tech relationship dynamics and sales process understanding for technologists."
+    categories:
+      - Tech Meets Business
+
+  - title: "On Agile"
+    episode_number: 6
+    published_at: 2024-11-08
+    description: "Agile practices, experiences, and insights; DORA metrics and Modern Agile frameworks discussed."
+    categories:
+      - Software Practices
+      - Teams & Collaboration
+
+  - title: "On What Makes a Good Team"
+    episode_number: 7
+    published_at: 2024-11-18
+    description: "Team composition, leadership roles, and team dynamics using the Belbin team roles framework."
+    categories:
+      - Teams & Collaboration
+
+  - title: "On eXtreme Programming"
+    episode_number: 8
+    published_at: 2025-01-05
+    description: "eXtreme Programming practices, principles, and experience-based insights."
+    categories:
+      - Software Practices
+
+  - title: "On Customer Support/Experience and Tech"
+    episode_number: 9
+    published_at: 2025-01-13
+    description: "Customer support and success roles and their relationship with technology departments."
+    categories:
+      - Tech Meets Business
+
+  - title: "On Tests First"
+    episode_number: 10
+    published_at: 2025-01-16
+    description: "Test-first development advantages, testable code correlation with quality, and common counterarguments."
+    categories:
+      - Software Practices
+
+  - title: "On Tests and RSpec"
+    episode_number: 11
+    published_at: 2025-02-14
+    description: "Testing best practices, RSpec guidance, common pitfalls, and real-world developer insights."
+    categories:
+      - Software Practices
+
+  - title: "On Team Efficiency"
+    episode_number: 12
+    published_at: 2025-02-23
+    description: "Team efficiency drivers, outcome-focused practices, and enhancement strategies."
+    categories:
+      - Teams & Collaboration
+
+  - title: "On Building a Community"
+    episode_number: 13
+    published_at: 2025-03-04
+    description: "Community building strategies, passion, and effort across different community types."
+    categories:
+      - Career & Learning
+
+  - title: "On Legacy Code"
+    episode_number: 14
+    published_at: 2025-06-06
+    description: "Legacy code definitions, working strategies, and quality assessment."
+    categories:
+      - Software Practices
+
+  - title: "On Software Teaming"
+    episode_number: 15
+    published_at: 2025-06-16
+    description: "Collaborative team problem-solving, organization for inclusive participation, and team dynamics exploration."
+    categories:
+      - Teams & Collaboration
+
+  - title: "On DDD (Domain-Driven Design)"
+    episode_number: 16
+    published_at: 2025-07-04
+    description: "DDD utility, applicability contexts, problem-solving benefits, and implementation recommendations."
+    categories:
+      - Software Practices
+      - Technology Deep Dives
+
+  - title: "On Marketing and Tech"
+    episode_number: 17
+    published_at: 2025-07-17
+    description: "Marketing-tech relationships and inter-departmental collaboration insights."
+    categories:
+      - Tech Meets Business
+
+  - title: "On Starting a New Role"
+    episode_number: 18
+    published_at: 2025-08-04
+    description: "Considerations for new roles, colleague integration strategies, and initial task selection."
+    categories:
+      - Career & Learning
+      - Teams & Collaboration
+
+  - title: "On Metrics"
+    episode_number: 19
+    published_at: 2025-08-14
+    description: "Worthwhile metrics, metric dangers, and contexts where metrics prove useful."
+    categories:
+      - Tech Meets Business
+      - Teams & Collaboration
+
+  - title: "On LLMs"
+    episode_number: 20
+    published_at: 2025-08-19
+    description: "LLM usage, implementation considerations, and philosophical questions about artificial intelligence and ethics."
+    categories:
+      - Technology Deep Dives
+
+  - title: "On PWAs"
+    episode_number: 21
+    published_at: 2025-09-28
+    description: "Progressive Web Applications viability and their specific use cases."
+    categories:
+      - Technology Deep Dives
+
+  - title: "On Team Practices"
+    episode_number: 22
+    published_at: 2025-10-06
+    description: "Team practices for excellent software writing and continuous integration."
+    categories:
+      - Software Practices
+      - Teams & Collaboration
+
+  - title: "On Bootcamps"
+    episode_number: 23
+    published_at: 2025-10-23
+    description: "Bootcamp experiences, industry integration advice for graduates, and bootcamps' current and future relevance."
+    categories:
+      - Career & Learning
+
+  - title: "On Misunderstood Concepts in Tech"
+    episode_number: 24
+    published_at: 2025-10-28
+    description: "Tech misunderstandings, comparison of car vs. tech industry maturity, and reflections on developer roles."
+    categories:
+      - Technology Deep Dives
+
+  - title: "On Taste"
+    episode_number: 25
+    published_at: 2025-11-18
+    description: "Exploring taste in programming — whether it's universal and how mistakes shape coding aesthetics."
+    categories:
+      - Software Practices
+      - Career & Learning
+
+  - title: "On OOP"
+    episode_number: 26
+    published_at: 2025-12-16
+    description: "Object-oriented programming exploration covering origins, naming conventions, design patterns, and modeling reality with objects."
+    categories:
+      - Software Practices
+      - Technology Deep Dives
+
+  - title: "On Ruby (and Rails?)"
+    episode_number: 27
+    published_at: 2026-01-07
+    description: "Ruby's elegance, community standards, type systems, and Rails' role in web development."
+    categories:
+      - Technology Deep Dives
