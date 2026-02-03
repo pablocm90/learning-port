@@ -1,4 +1,4 @@
-<div class="paint-drip-canvas py-16" data-controller="paint-drip" data-action="click@window->paint-drip#closeOnClickOutside">
+<div class="paint-drip-canvas py-16">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
     <%
       # Fixed width per category for consistent drip appearance
@@ -152,20 +152,5 @@
       <% end %>
     </svg>
 
-    <!-- Expanded moments panels -->
-    <div class="drips-details flex justify-around px-8 mt-4">
-      <% categories.each do |category| %>
-        <div data-drip-id="<%= category.id %>" class="drip-detail-container flex-1 max-w-xs mx-2">
-          <div data-paint-drip-target="moments" class="hidden bg-surface border border-muted/20 rounded-lg p-4 shadow-lg">
-            <h3 class="font-semibold text-text mb-3"><%= category.name %></h3>
-            <div class="space-y-2 max-h-80 overflow-y-auto">
-              <% category.learning_moments.chronological.each do |moment| %>
-                <%= render "learning/droplet", moment: moment %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
   </div>
 </div>
