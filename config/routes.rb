@@ -12,5 +12,6 @@ Rails.application.routes.draw do
 
   get "learning", to: "learning#index", as: :learning_portfolio
   get "podcast", to: "podcast_episodes#index", as: :podcast
+  get "podcast/collections/:slug", to: "podcast_episodes#show", as: :podcast_collection
   get "blog/latest", to: "blog_posts#latest", as: :latest_blog_post
 end
