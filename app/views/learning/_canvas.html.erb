@@ -2,11 +2,16 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
     <%
       # Fixed width per category for consistent drip appearance
-      category_width = 120
+      category_width = 150
       min_canvas_width = 1000
       canvas_width = [categories.count * category_width + 100, min_canvas_width].max
+
+      # Dynamic drip range and canvas height based on data
+      min_drip_length = 40
+      max_drip_length = 550
+      canvas_height = 65 + max_drip_length + 60
     %>
-    <svg class="min-w-full" style="width: <%= canvas_width %>px;" viewBox="0 0 <%= canvas_width %> 480" preserveAspectRatio="xMidYMin meet">
+    <svg class="min-w-full" style="width: <%= canvas_width %>px;" viewBox="0 0 <%= canvas_width %> <%= canvas_height %>" preserveAspectRatio="xMidYMin meet">
       <defs>
         <!-- Color palette for paint drips - matte colors varying left to right -->
         <%
@@ -27,7 +32,7 @@
           color_idx = cat_idx % drip_colors.length
           color = drip_colors[color_idx]
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-          base_drip_length = 100 + (depth_percentage / 100.0 * 280)
+          base_drip_length = min_drip_length + (depth_percentage / 100.0 * (max_drip_length - min_drip_length))
 
           # Color section spans from midpoint to previous category to midpoint to next
           spacing = canvas_width.to_f / (categories.count + 1)
@@ -79,15 +84,36 @@
         </g>
       <% end %>
 
-      <!-- Category names - on top band -->
+      <!-- Category names - on top band, wrapped for long names -->
       <% categories.each_with_index do |category, index| %>
         <%
           x_pos = ((index + 1) * (canvas_width.to_f / (categories.count + 1))).to_i
+          words = category.name.split(/[\s\/]+/)
+          # Split into lines that fit ~14 chars each
+          lines = []
+          current_line = ""
+          words.each do |word|
+            separator = category.name.include?("/") && current_line.present? ? "/" : " "
+            if current_line.empty?
+              current_line = word
+            elsif (current_line + separator + word).length <= 14
+              current_line += separator + word
+            else
+              lines << current_line
+              current_line = word
+            end
+          end
+          lines << current_line if current_line.present?
+          line_height = 13
+          total_text_height = lines.count * line_height
+          start_y = 50 - (total_text_height - line_height) / 2.0
         %>
-        <text x="<%= x_pos %>" y="50"
+        <text x="<%= x_pos %>" y="<%= start_y %>"
               text-anchor="middle"
-              style="font-size: 14px; font-weight: 600; fill: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
-          <%= category.name %>
+              style="font-size: 11px; font-weight: 600; fill: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
+          <% lines.each_with_index do |line, li| %>
+            <tspan x="<%= x_pos %>" dy="<%= li == 0 ? 0 : line_height %>"><%= line %></tspan>
+          <% end %>
         </text>
       <% end %>
 
@@ -96,7 +122,7 @@
         <%
           x_pos = ((index + 1) * (canvas_width.to_f / (categories.count + 1))).to_i
           depth_percentage = max_depth > 0 ? (category.drip_depth / max_depth * 100) : 0
-          drip_length = 100 + (depth_percentage / 100.0 * 280)
+          drip_length = min_drip_length + (depth_percentage / 100.0 * (max_drip_length - min_drip_length))
           y_start = 65
           moments = category.learning_moments.chronological.to_a
           moment_count = moments.count
