@@ -98,6 +98,14 @@ body {
   background-color: rgba(from var(--theme-primary) r g b / 0.9) !important;
 }
 
+.bg-primary\/10 {
+  background-color: rgba(from var(--theme-primary) r g b / 0.1) !important;
+}
+
 .bg-secondary\/20 {
   background-color: rgba(from var(--theme-secondary) r g b / 0.2) !important;
+}
+
+.hover\:bg-primary\/20:hover {
+  background-color: rgba(from var(--theme-primary) r g b / 0.2) !important;
 }
