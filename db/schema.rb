@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_03_113114) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_03_113524) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -41,6 +41,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_113114) do
     t.index ["name"], name: "index_podcast_categories_on_name", unique: true
   end
 
+  create_table "podcast_episode_categories", force: :cascade do |t|
+    t.bigint "podcast_episode_id", null: false
+    t.bigint "podcast_category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["podcast_category_id"], name: "index_podcast_episode_categories_on_podcast_category_id"
+    t.index ["podcast_episode_id", "podcast_category_id"], name: "idx_episode_categories_unique", unique: true
+    t.index ["podcast_episode_id"], name: "index_podcast_episode_categories_on_podcast_episode_id"
+  end
+
   create_table "podcast_episodes", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -68,4 +78,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_113114) do
   end
 
   add_foreign_key "learning_moments", "categories"
+  add_foreign_key "podcast_episode_categories", "podcast_categories"
+  add_foreign_key "podcast_episode_categories", "podcast_episodes"
 end
