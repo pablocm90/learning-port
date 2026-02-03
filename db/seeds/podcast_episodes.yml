@@ -22,6 +22,8 @@ episodes:
     episode_number: 1
     published_at: 2024-05-08
     description: "Software engineer power and ethical responsibilities in technology development."
+    external_links:
+      spotify: "https://open.spotify.com/episode/4kwTxjbcDj7M6TK7cfFvN7"
     categories:
       - Career & Learning
 
@@ -29,6 +31,8 @@ episodes:
     episode_number: 2
     published_at: 2024-03-28
     description: "Continuous learning in tech industry contexts and professional development."
+    external_links:
+      spotify: "https://open.spotify.com/episode/0yCSuo3WQqgcpSCajxxouK"
     categories:
       - Career & Learning
 
@@ -36,6 +40,8 @@ episodes:
     episode_number: 3
     published_at: 2024-06-17
     description: "Solo-preneurship journey experiences with projects like Zero Config Rails and Proggy.io."
+    external_links:
+      spotify: "https://open.spotify.com/episode/2dwgyapnxWwsp1WVDwKvm4"
     categories:
       - Tech Meets Business
 
@@ -43,6 +49,8 @@ episodes:
     episode_number: 4
     published_at: 2024-09-27
     description: "Generalist identity, thriving amid specialization pressures, and career journey lessons."
+    external_links:
+      spotify: "https://open.spotify.com/episode/5bzMxF2MoHR7YHA6s8mcVw"
     categories:
       - Career & Learning
 
@@ -50,6 +58,8 @@ episodes:
     episode_number: 5
     published_at: 2024-10-12
     description: "Sales-tech relationship dynamics and sales process understanding for technologists."
+    external_links:
+      spotify: "https://open.spotify.com/episode/73imh9O1JLL2Vzy5Aw0A7x"
     categories:
       - Tech Meets Business
 
@@ -57,6 +67,8 @@ episodes:
     episode_number: 6
     published_at: 2024-11-08
     description: "Agile practices, experiences, and insights; DORA metrics and Modern Agile frameworks discussed."
+    external_links:
+      spotify: "https://open.spotify.com/episode/60rMHDzFa1HbS0UbV3DuN4"
     categories:
       - Software Practices
       - Teams & Collaboration
@@ -65,6 +77,8 @@ episodes:
     episode_number: 7
     published_at: 2024-11-18
     description: "Team composition, leadership roles, and team dynamics using the Belbin team roles framework."
+    external_links:
+      spotify: "https://open.spotify.com/episode/32g7GZBlBY0lQD6qyouZOY"
     categories:
       - Teams & Collaboration
 
@@ -72,6 +86,8 @@ episodes:
     episode_number: 8
     published_at: 2025-01-05
     description: "eXtreme Programming practices, principles, and experience-based insights."
+    external_links:
+      spotify: "https://open.spotify.com/episode/0djMCcFLnAbhEVAwM8VuXO"
     categories:
       - Software Practices
 
@@ -79,6 +95,8 @@ episodes:
     episode_number: 9
     published_at: 2025-01-13
     description: "Customer support and success roles and their relationship with technology departments."
+    external_links:
+      spotify: "https://open.spotify.com/episode/002rlgo2H51wUby8wjWPSx"
     categories:
       - Tech Meets Business
 
@@ -86,6 +104,8 @@ episodes:
     episode_number: 10
     published_at: 2025-01-16
     description: "Test-first development advantages, testable code correlation with quality, and common counterarguments."
+    external_links:
+      spotify: "https://open.spotify.com/episode/4nTScPPh79LEoodIv9c2Q9"
     categories:
       - Software Practices
 
@@ -93,6 +113,8 @@ episodes:
     episode_number: 11
     published_at: 2025-02-14
     description: "Testing best practices, RSpec guidance, common pitfalls, and real-world developer insights."
+    external_links:
+      spotify: "https://open.spotify.com/episode/08C0zExKNyUKGZJLofx58d"
     categories:
       - Software Practices
 
@@ -100,6 +122,8 @@ episodes:
     episode_number: 12
     published_at: 2025-02-23
     description: "Team efficiency drivers, outcome-focused practices, and enhancement strategies."
+    external_links:
+      spotify: "https://open.spotify.com/episode/5icI9NDy7r21siH65o92Yf"
     categories:
       - Teams & Collaboration
 
@@ -107,6 +131,8 @@ episodes:
     episode_number: 13
     published_at: 2025-03-04
     description: "Community building strategies, passion, and effort across different community types."
+    external_links:
+      spotify: "https://open.spotify.com/episode/0iuKvaNt6vy2mkSFoDMrQh"
     categories:
       - Career & Learning
 
@@ -114,6 +140,8 @@ episodes:
     episode_number: 14
     published_at: 2025-06-06
     description: "Legacy code definitions, working strategies, and quality assessment."
+    external_links:
+      spotify: "https://open.spotify.com/episode/4851XCeaUSto2wkA49NcOH"
     categories:
       - Software Practices
 
@@ -121,6 +149,8 @@ episodes:
     episode_number: 15
     published_at: 2025-06-16
     description: "Collaborative team problem-solving, organization for inclusive participation, and team dynamics exploration."
+    external_links:
+      spotify: "https://open.spotify.com/episode/3zuMQ7cgLaMv3zFOMd9THQ"
     categories:
       - Teams & Collaboration
 
@@ -128,6 +158,8 @@ episodes:
     episode_number: 16
     published_at: 2025-07-04
     description: "DDD utility, applicability contexts, problem-solving benefits, and implementation recommendations."
+    external_links:
+      spotify: "https://open.spotify.com/episode/4FnShypPf7JTyqU2qoLCk2"
     categories:
       - Software Practices
       - Technology Deep Dives
@@ -136,6 +168,8 @@ episodes:
     episode_number: 17
     published_at: 2025-07-17
     description: "Marketing-tech relationships and inter-departmental collaboration insights."
+    external_links:
+      spotify: "https://open.spotify.com/episode/22duKDRd55WL7HS8ls31qc"
     categories:
       - Tech Meets Business
 
@@ -143,6 +177,8 @@ episodes:
     episode_number: 18
     published_at: 2025-08-04
     description: "Considerations for new roles, colleague integration strategies, and initial task selection."
+    external_links:
+      spotify: "https://open.spotify.com/episode/2V4S4Y4gpbbeJ5e9PlZd1g"
     categories:
       - Career & Learning
       - Teams & Collaboration
@@ -151,6 +187,8 @@ episodes:
     episode_number: 19
     published_at: 2025-08-14
     description: "Worthwhile metrics, metric dangers, and contexts where metrics prove useful."
+    external_links:
+      spotify: "https://open.spotify.com/episode/6m6kkYos9rXB9Ow3naTZir"
     categories:
       - Tech Meets Business
       - Teams & Collaboration
@@ -159,6 +197,8 @@ episodes:
     episode_number: 20
     published_at: 2025-08-19
     description: "LLM usage, implementation considerations, and philosophical questions about artificial intelligence and ethics."
+    external_links:
+      spotify: "https://open.spotify.com/episode/0PmPRfGpY8AxpI8bR5gLlp"
     categories:
       - Technology Deep Dives
 
@@ -166,6 +206,8 @@ episodes:
     episode_number: 21
     published_at: 2025-09-28
     description: "Progressive Web Applications viability and their specific use cases."
+    external_links:
+      spotify: "https://open.spotify.com/episode/3JpVAQBVXfRYWSCSCyfKrt"
     categories:
       - Technology Deep Dives
 
@@ -173,6 +215,8 @@ episodes:
     episode_number: 22
     published_at: 2025-10-06
     description: "Team practices for excellent software writing and continuous integration."
+    external_links:
+      spotify: "https://open.spotify.com/episode/6GSWwqkfONj4NJiJEIKO4k"
     categories:
       - Software Practices
       - Teams & Collaboration
@@ -181,6 +225,8 @@ episodes:
     episode_number: 23
     published_at: 2025-10-23
     description: "Bootcamp experiences, industry integration advice for graduates, and bootcamps' current and future relevance."
+    external_links:
+      spotify: "https://open.spotify.com/episode/40F1Nkropy2z6lzRkBAaL5"
     categories:
       - Career & Learning
 
@@ -188,6 +234,8 @@ episodes:
     episode_number: 24
     published_at: 2025-10-28
     description: "Tech misunderstandings, comparison of car vs. tech industry maturity, and reflections on developer roles."
+    external_links:
+      spotify: "https://open.spotify.com/episode/2YszJNnj0inMxkhl1asfUo"
     categories:
       - Technology Deep Dives
 
@@ -195,6 +243,8 @@ episodes:
     episode_number: 25
     published_at: 2025-11-18
     description: "Exploring taste in programming — whether it's universal and how mistakes shape coding aesthetics."
+    external_links:
+      spotify: "https://open.spotify.com/episode/6jhKLVhHuJJnTdrTbHfTRc"
     categories:
       - Software Practices
       - Career & Learning
@@ -203,6 +253,8 @@ episodes:
     episode_number: 26
     published_at: 2025-12-16
     description: "Object-oriented programming exploration covering origins, naming conventions, design patterns, and modeling reality with objects."
+    external_links:
+      spotify: "https://open.spotify.com/episode/0CnoEIlk2A1nAcFPoFTToK"
     categories:
       - Software Practices
       - Technology Deep Dives
@@ -211,5 +263,7 @@ episodes:
     episode_number: 27
     published_at: 2026-01-07
     description: "Ruby's elegance, community standards, type systems, and Rails' role in web development."
+    external_links:
+      spotify: "https://open.spotify.com/episode/0UaTHzRtNkiSfqWVigJNTq"
     categories:
       - Technology Deep Dives
