@@ -30,6 +30,14 @@ RSpec.describe "PodcastEpisodes", type: :request do
       get podcast_path
       expect(response.body).to include("See all")
     end
+
+    it "displays category descriptions" do
+      create(:podcast_category, name: "Software Practices", slug: "software-practices")
+
+      get podcast_path
+
+      expect(response.body).to include("Coding patterns, architecture, and development workflows.")
+    end
   end
 
   describe "GET /podcast/collections/all" do

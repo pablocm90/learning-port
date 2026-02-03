@@ -5,15 +5,29 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <% @categories.each do |category| %>
-        <%= link_to podcast_collection_path(category.slug), class: "bg-surface rounded-lg p-6 border border-muted/20 hover:border-primary/50 transition group" do %>
-          <h3 class="text-lg font-semibold group-hover:text-primary transition"><%= category.name %></h3>
-          <p class="text-sm text-muted mt-2"><%= @episode_counts[category.id] || 0 %> episodes</p>
+        <% meta = podcast_category_meta(category.slug) %>
+        <%= link_to podcast_collection_path(category.slug),
+            class: "bg-surface rounded-lg p-6 border border-muted/20 hover:border-primary/50 transition group",
+            style: "border-left: 4px solid #{meta[:color]};" do %>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl" aria-hidden="true"><%= meta[:icon] %></span>
+            <h3 class="text-lg font-semibold group-hover:text-primary transition"><%= category.name %></h3>
+          </div>
+          <p class="text-sm text-muted"><%= meta[:description] %></p>
+          <p class="text-xs text-muted mt-3"><%= @episode_counts[category.id] || 0 %> episodes</p>
         <% end %>
       <% end %>
 
-      <%= link_to podcast_collection_path("all"), class: "bg-surface rounded-lg p-6 border border-muted/20 hover:border-primary/50 transition group" do %>
-        <h3 class="text-lg font-semibold group-hover:text-primary transition">See all</h3>
-        <p class="text-sm text-muted mt-2"><%= @total_episode_count %> episodes</p>
+      <% meta = podcast_category_meta("all") %>
+      <%= link_to podcast_collection_path("all"),
+          class: "bg-surface rounded-lg p-6 border border-muted/20 hover:border-primary/50 transition group",
+          style: "border-left: 4px solid #{meta[:color]};" do %>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xl" aria-hidden="true"><%= meta[:icon] %></span>
+          <h3 class="text-lg font-semibold group-hover:text-primary transition">See all</h3>
+        </div>
+        <p class="text-sm text-muted"><%= meta[:description] %></p>
+        <p class="text-xs text-muted mt-3"><%= @total_episode_count %> episodes</p>
       <% end %>
     </div>
   </div>
