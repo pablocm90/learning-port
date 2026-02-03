@@ -76,6 +76,7 @@ if File.exist?(podcast_data_path)
   categories_data.each do |cat_data|
     cat = PodcastCategory.find_or_create_by!(name: cat_data['name']) do |c|
       c.position = cat_data['position']
+      c.slug = cat_data['slug']
     end
     created_categories += 1 if cat.previously_new_record?
   end

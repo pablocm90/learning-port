@@ -1,14 +1,19 @@
 # Podcast categories
 categories:
   - name: Software Practices
+    slug: software-practices
     position: 1
   - name: Teams & Collaboration
+    slug: teams-and-collaboration
     position: 2
   - name: Career & Learning
+    slug: career-and-learning
     position: 3
   - name: Tech Meets Business
+    slug: tech-meets-business
     position: 4
   - name: Technology Deep Dives
+    slug: technology-deep-dives
     position: 5
 
 # Podcast episodes
