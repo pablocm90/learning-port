@@ -14,9 +14,9 @@
         <div class="drips-details">
           <% @categories.each do |category| %>
             <div data-drip-id="<%= category.id %>" class="drip-detail-container">
-              <div data-paint-drip-target="moments" class="hidden bg-surface border border-muted/20 rounded-lg p-4 shadow-lg">
+              <div data-paint-drip-target="moments" class="hidden">
                 <h3 class="font-semibold text-text mb-3"><%= category.name %></h3>
-                <div class="space-y-2 max-h-80 overflow-y-auto">
+                <div class="flex flex-wrap gap-2">
                   <% category.learning_moments.chronological.each do |moment| %>
                     <%= render "learning/droplet", moment: moment %>
                   <% end %>

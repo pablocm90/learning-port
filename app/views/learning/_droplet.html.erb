@@ -1,17 +1,28 @@
-<div class="droplet flex items-start gap-2 p-2 rounded bg-background/50">
-  <span class="text-sm flex-shrink-0">
-    <%= case moment.engagement_type
-        when 'consumed' then '📖'
-        when 'experimented' then '🧪'
-        when 'applied' then '🔨'
-        when 'shared' then '📣'
-        end %>
+<% if moment.url.present? %>
+  <%= link_to moment.url, target: "_blank", rel: "noopener noreferrer",
+      class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/10 border border-muted/20 text-sm text-text hover:border-primary/40 hover:bg-primary/5 transition-colors" do %>
+    <span class="flex-shrink-0">
+      <%= case moment.engagement_type
+          when 'consumed' then '📖'
+          when 'experimented' then '🧪'
+          when 'applied' then '🔨'
+          when 'shared' then '📣'
+          end %>
+    </span>
+    <span><%= moment.description %></span>
+    <span class="text-xs text-muted"><%= moment.occurred_at.strftime("%b %Y") %></span>
+  <% end %>
+<% else %>
+  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/10 border border-muted/20 text-sm text-text">
+    <span class="flex-shrink-0">
+      <%= case moment.engagement_type
+          when 'consumed' then '📖'
+          when 'experimented' then '🧪'
+          when 'applied' then '🔨'
+          when 'shared' then '📣'
+          end %>
+    </span>
+    <span><%= moment.description %></span>
+    <span class="text-xs text-muted"><%= moment.occurred_at.strftime("%b %Y") %></span>
   </span>
-  <div class="flex-1 min-w-0">
-    <p class="text-sm text-text"><%= moment.description %></p>
-    <% if moment.url.present? %>
-      <%= link_to "Link", moment.url, target: "_blank", rel: "noopener noreferrer", class: "text-xs text-primary hover:underline" %>
-    <% end %>
-    <p class="text-xs text-muted mt-1"><%= moment.occurred_at.strftime("%b %Y") %></p>
-  </div>
-</div>
+<% end %>
