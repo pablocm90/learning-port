@@ -43,7 +43,8 @@
         <!-- Color section on top band - touching adjacent sections -->
         <rect x="<%= section_start %>" y="20"
               width="<%= section_width %>" height="50"
-              fill="<%= color %>"/>
+              fill="<%= color %>"
+              pointer-events="none"/>
 
         <!-- Drips - all within the color section bounds -->
         <%
@@ -109,6 +110,7 @@
         %>
         <text x="<%= x_pos %>" y="<%= start_y %>"
               text-anchor="middle"
+              pointer-events="none"
               style="font-size: 11px; font-weight: 600; fill: white; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
           <% lines.each_with_index do |line, li| %>
             <tspan x="<%= x_pos %>" dy="<%= li == 0 ? 0 : line_height %>"><%= line %></tspan>
@@ -138,6 +140,7 @@
             <text x="<%= x_pos %>" y="<%= icon_y %>"
                   text-anchor="middle"
                   dominant-baseline="central"
+                  pointer-events="none"
                   style="font-size: 14px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));">
               <%= case moment.engagement_type
                   when 'consumed' then '📖'
