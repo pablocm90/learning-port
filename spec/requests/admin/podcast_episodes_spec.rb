@@ -27,6 +27,23 @@ RSpec.describe "Admin::PodcastEpisodes", type: :request do
 
       expect(response).to redirect_to(admin_dashboard_path)
     end
+
+    it "creates a podcast episode with categories" do
+      category = create(:podcast_category, name: "Software Practices")
+
+      post admin_podcast_episodes_path, params: {
+        podcast_episode: {
+          title: "Episode with Categories",
+          episode_number: 99,
+          description: "Testing categories",
+          published_at: Date.today,
+          podcast_category_ids: [category.id]
+        }
+      }
+
+      episode = PodcastEpisode.last
+      expect(episode.podcast_categories).to include(category)
+    end
   end
 
   describe "PATCH /admin/podcast_episodes/:id" do

@@ -41,7 +41,8 @@ module Admin
 
     def podcast_episode_params
       params.require(:podcast_episode).permit(
-        :title, :episode_number, :description, :published_at, :embed_code
+        :title, :episode_number, :description, :published_at, :embed_code,
+        podcast_category_ids: []
       )
     end
   end

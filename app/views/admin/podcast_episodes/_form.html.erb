@@ -37,6 +37,20 @@
     <%= form.text_area :embed_code, rows: 4, class: "w-full bg-background border border-muted/30 rounded-lg px-4 py-2 text-text font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-y", placeholder: '<iframe src="https://open.spotify.com/embed/episode/..."></iframe>' %>
   </div>
 
+  <div>
+    <span class="block text-sm font-medium text-muted mb-2">Categories</span>
+    <div class="flex flex-wrap gap-4">
+      <% PodcastCategory.ordered.each do |category| %>
+        <label class="flex items-center gap-2 text-sm text-text cursor-pointer">
+          <%= check_box_tag "podcast_episode[podcast_category_ids][]", category.id,
+              podcast_episode.podcast_category_ids.include?(category.id),
+              class: "rounded border-muted/30 bg-background text-primary focus:ring-primary" %>
+          <%= category.name %>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
   <div class="flex items-center gap-4 pt-4">
     <%= form.submit class: "bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition cursor-pointer" %>
     <%= link_to "Cancel", admin_dashboard_path, class: "text-muted hover:text-text transition" %>
