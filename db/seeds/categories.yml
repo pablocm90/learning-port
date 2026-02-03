@@ -1,42 +1,155 @@
-- name: Agile
+- name: Ruby/Rails
   position: 1
   moments:
     - engagement_type: consumed
-      description: Read Agile Manifesto
-      occurred_at: 2020-01-15
-      url: https://agilemanifesto.org
-    - engagement_type: experimented
-      description: First sprint planning session
-      occurred_at: 2020-03-01
+      description: LeWagon bootcamp
+      occurred_at: 2018-06-01
     - engagement_type: applied
-      description: Led retrospectives for 6 months
-      occurred_at: 2021-06-15
+      description: StudyAdvisor project
+      occurred_at: 2018-09-01
+    - engagement_type: experimented
+      description: RSpec
+      occurred_at: 2019-01-01
+    - engagement_type: consumed
+      description: The Complete Guide to Rails Performance
+      occurred_at: 2020-01-01
+    - engagement_type: experimented
+      description: Service Objects
+      occurred_at: 2020-01-01
+    - engagement_type: applied
+      description: StudyCall project
+      occurred_at: 2020-06-01
+    - engagement_type: experimented
+      description: Hotwire
+      occurred_at: 2021-01-01
+    - engagement_type: consumed
+      description: Ruby Under a Microscope
+      occurred_at: 2022-01-01
+    - engagement_type: experimented
+      description: Minitest
+      occurred_at: 2022-01-01
+    - engagement_type: experimented
+      description: Lambdas
+      occurred_at: 2022-01-01
+    - engagement_type: consumed
+      description: Design Patterns in Ruby
+      occurred_at: 2022-06-01
+    - engagement_type: applied
+      description: Yago project
+      occurred_at: 2022-09-01
+    - engagement_type: applied
+      description: Recovr project
+      occurred_at: 2023-01-01
+    - engagement_type: consumed
+      description: Layered Design for Ruby on Rails Applications
+      occurred_at: 2024-01-01
 
-- name: Collaborative Coding
+- name: Frontend
   position: 2
   moments:
-    - engagement_type: consumed
-      description: Read Extreme Programming Explained
-      occurred_at: 2021-02-10
-    - engagement_type: experimented
-      description: First pair programming session
-      occurred_at: 2021-03-15
     - engagement_type: applied
-      description: Regular ensemble programming at work
+      description: StudyAdvisor (Vue)
+      occurred_at: 2018-09-01
+    - engagement_type: applied
+      description: StudyCall (Hotwire)
+      occurred_at: 2020-06-01
+    - engagement_type: experimented
+      description: Reactive Programming
       occurred_at: 2022-01-01
-    - engagement_type: shared
-      description: Facilitated ensemble session for new team
-      occurred_at: 2023-06-01
+    - engagement_type: applied
+      description: Yago (Vue)
+      occurred_at: 2022-09-01
+    - engagement_type: applied
+      description: Recovr (React)
+      occurred_at: 2023-01-01
 
-- name: TDD
+- name: Engineering Fundamentals
   position: 3
   moments:
     - engagement_type: consumed
-      description: "Watched Uncle Bob's TDD videos"
+      description: Design Patterns (Gang of Four)
+      occurred_at: 2019-01-01
+    - engagement_type: consumed
+      description: The Pragmatic Programmer
       occurred_at: 2019-06-01
-    - engagement_type: experimented
-      description: First red-green-refactor cycle
-      occurred_at: 2019-07-01
-    - engagement_type: applied
-      description: TDD as default practice
+    - engagement_type: consumed
+      description: Clean Code
       occurred_at: 2020-01-01
+    - engagement_type: consumed
+      description: Algorithms in a Nutshell
+      occurred_at: 2020-06-01
+    - engagement_type: consumed
+      description: eXtreme Programming
+      occurred_at: 2024-01-01
+
+- name: Testing
+  position: 4
+  moments:
+    - engagement_type: consumed
+      description: TDD by Example
+      occurred_at: 2022-01-01
+    - engagement_type: consumed
+      description: BDD in Action
+      occurred_at: 2023-01-01
+    - engagement_type: consumed
+      description: ZOMBIE testing
+      occurred_at: 2023-06-01
+
+- name: Continuous Delivery
+  position: 5
+  moments:
+    - engagement_type: consumed
+      description: The Pragmatic Programmer
+      occurred_at: 2019-06-01
+    - engagement_type: applied
+      description: TDD practice
+      occurred_at: 2020-01-01
+    - engagement_type: applied
+      description: Ask, Show, Ship
+      occurred_at: 2023-01-01
+    - engagement_type: consumed
+      description: eXtreme Programming
+      occurred_at: 2024-01-01
+    - engagement_type: consumed
+      description: This is Lean
+      occurred_at: 2025-01-01
+
+- name: Pair/Ensemble Programming
+  position: 6
+  moments:
+    - engagement_type: consumed
+      description: Code with the Power of the Crowd
+      occurred_at: 2023-01-01
+    - engagement_type: consumed
+      description: So We Tried Ensemble Programming
+      occurred_at: 2024-06-02
+      url: https://blog.codemanship.dev/so-we-tried-ensemble-programming
+    - engagement_type: consumed
+      description: Software Teaming
+      occurred_at: 2025-02-20
+      url: https://blog.codemanship.dev/software-teaming
+
+- name: Systems Thinking
+  position: 7
+  moments:
+    - engagement_type: applied
+      description: StudyAdvisor - CTO/Team Lead
+      occurred_at: 2018-09-01
+    - engagement_type: applied
+      description: StudyCall - CTO/Team Lead
+      occurred_at: 2020-06-01
+    - engagement_type: consumed
+      description: Shape Up
+      occurred_at: 2021-01-01
+    - engagement_type: applied
+      description: Recovr - Team Lead
+      occurred_at: 2023-01-01
+    - engagement_type: consumed
+      description: The Scrum Guide
+      occurred_at: 2025-01-01
+    - engagement_type: consumed
+      description: This is Lean
+      occurred_at: 2025-01-01
+    - engagement_type: consumed
+      description: Thinking in Systems
+      occurred_at: 2025-06-01
