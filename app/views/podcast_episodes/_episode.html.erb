@@ -3,11 +3,11 @@
     <div>
       <div class="flex items-center gap-3 mb-2">
         <span class="text-sm text-muted">Episode <%= episode.episode_number %></span>
-        <span class="text-sm text-muted">•</span>
+        <span class="text-sm text-muted">&middot;</span>
         <span class="text-sm text-muted"><%= episode.published_at.strftime("%B %d, %Y") %></span>
       </div>
       <% if episode.podcast_categories.any? %>
-        <div class="flex flex-wrap gap-2 mt-2">
+        <div class="flex flex-wrap gap-2 mb-2">
           <% episode.podcast_categories.each do |category| %>
             <span class="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary"><%= category.name %></span>
           <% end %>
