@@ -109,3 +109,11 @@ body {
 .hover\:bg-primary\/20:hover {
   background-color: rgba(from var(--theme-primary) r g b / 0.2) !important;
 }
+
+.bg-muted\/10 {
+  background-color: rgba(from var(--theme-muted) r g b / 0.1) !important;
+}
+
+.hover\:bg-primary\/5:hover {
+  background-color: rgba(from var(--theme-primary) r g b / 0.05) !important;
+}
