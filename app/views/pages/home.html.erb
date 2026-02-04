@@ -19,7 +19,7 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center mb-8">
       <h2 class="text-2xl font-semibold">How I Learn</h2>
-      <%= link_to "See all ->", learning_portfolio_path, class: "text-primary hover:text-primary/80 transition" %>
+      <%= link_to "See all →", learning_portfolio_path, class: "text-primary hover:text-primary/80 transition" %>
     </div>
 
     <% if @active_categories.any? %>
@@ -35,7 +35,7 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center mb-8">
       <h2 class="text-2xl font-semibold">Latest Episode</h2>
-      <%= link_to "All episodes ->", podcast_path, class: "text-primary hover:text-primary/80 transition" %>
+      <%= link_to "All episodes →", podcast_path, class: "text-primary hover:text-primary/80 transition" %>
     </div>
 
     <% if @latest_episode %>
@@ -51,7 +51,7 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center mb-8">
       <h2 class="text-2xl font-semibold">Latest from the Blog</h2>
-      <%= link_to "Read more ->", ENV.fetch('BLOG_URL', 'https://blog.example.com'), class: "text-primary hover:text-primary/80 transition", target: "_blank" %>
+      <%= link_to "Read more →", ENV.fetch('BLOG_URL', 'https://blog.example.com'), class: "text-primary hover:text-primary/80 transition", target: "_blank" %>
     </div>
 
     <%= turbo_frame_tag "latest_blog_post", src: latest_blog_post_path, loading: :lazy do %>
