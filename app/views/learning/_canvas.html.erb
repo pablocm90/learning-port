@@ -1,5 +1,5 @@
 <div class="paint-drip-canvas py-16">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <%
       # Fixed width per category for consistent drip appearance
       category_width = 100
@@ -10,7 +10,7 @@
       max_drip_length = 550
       canvas_height = 65 + max_drip_length + 60
     %>
-    <svg style="width: <%= canvas_width %>px;" viewBox="0 0 <%= canvas_width %> <%= canvas_height %>" preserveAspectRatio="xMidYMin meet">
+    <svg class="w-full" viewBox="0 0 <%= canvas_width %> <%= canvas_height %>" preserveAspectRatio="xMidYMin meet">
       <defs>
         <!-- Color palette for paint drips - matte colors varying left to right -->
         <%
