@@ -49,7 +49,7 @@ RSpec.describe PodcastCategory, type: :model do
       cat2 = create(:podcast_category, position: 2)
       cat1 = create(:podcast_category, position: 1)
 
-      expect(PodcastCategory.ordered).to eq([cat1, cat2])
+      expect(PodcastCategory.ordered).to eq([ cat1, cat2 ])
     end
   end
 end

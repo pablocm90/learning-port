@@ -1,7 +1,7 @@
 module Admin
   class CategoriesController < ApplicationController
     before_action :authenticate_writer!
-    before_action :set_category, only: [:edit, :update, :destroy]
+    before_action :set_category, only: [ :edit, :update, :destroy ]
 
     def new
       @category = Category.new

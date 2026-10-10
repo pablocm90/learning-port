@@ -3,7 +3,7 @@
 namespace :db do
   desc "Seed 12 test categories for paint drip visualization testing"
   task seed_test_categories: :environment do
-    require 'yaml'
+    require "yaml"
 
     puts "Clearing existing categories and moments..."
     LearningMoment.destroy_all
@@ -11,7 +11,7 @@ namespace :db do
 
     puts "Seeding 12 test categories..."
     categories_file = Rails.root.join("db/seeds/categories_test.yml")
-    categories_data = YAML.safe_load_file(categories_file, permitted_classes: [Date, Time, DateTime])
+    categories_data = YAML.safe_load_file(categories_file, permitted_classes: [ Date, Time, DateTime ])
 
     categories_data.each do |cat_data|
       category = Category.create!(

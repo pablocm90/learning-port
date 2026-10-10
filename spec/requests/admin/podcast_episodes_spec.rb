@@ -37,7 +37,7 @@ RSpec.describe "Admin::PodcastEpisodes", type: :request do
           episode_number: 99,
           description: "Testing categories",
           published_at: Date.today,
-          podcast_category_ids: [category.id]
+          podcast_category_ids: [ category.id ]
         }
       }
 

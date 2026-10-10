@@ -22,7 +22,7 @@ puts "\nSeeding learning items from YAML..."
 
 learning_items_path = Rails.root.join('db/seeds/learning_items.yml')
 if File.exist?(learning_items_path)
-  learning_items = YAML.safe_load_file(learning_items_path, permitted_classes: [Date, Time, DateTime]) || []
+  learning_items = YAML.safe_load_file(learning_items_path, permitted_classes: [ Date, Time, DateTime ]) || []
   created_count = 0
   updated_count = 0
 
@@ -67,7 +67,7 @@ puts "\nSeeding podcast episodes and categories from YAML..."
 
 podcast_data_path = Rails.root.join('db/seeds/podcast_episodes.yml')
 if File.exist?(podcast_data_path)
-  podcast_data = YAML.safe_load_file(podcast_data_path, permitted_classes: [Date, Time, DateTime]) || {}
+  podcast_data = YAML.safe_load_file(podcast_data_path, permitted_classes: [ Date, Time, DateTime ]) || {}
 
   # Seed podcast categories
   categories_data = podcast_data['categories'] || []
@@ -129,7 +129,7 @@ puts "\nSeeding categories and learning moments from YAML..."
 
 categories_file = Rails.root.join("db/seeds/categories.yml")
 if File.exist?(categories_file)
-  categories_data = YAML.safe_load_file(categories_file, permitted_classes: [Date, Time, DateTime]) || []
+  categories_data = YAML.safe_load_file(categories_file, permitted_classes: [ Date, Time, DateTime ]) || []
   created_categories = 0
   created_moments = 0
 
