@@ -1,7 +1,7 @@
 module Admin
   class PodcastEpisodesController < ApplicationController
     before_action :authenticate_writer!
-    before_action :set_podcast_episode, only: [:edit, :update, :destroy]
+    before_action :set_podcast_episode, only: [ :edit, :update, :destroy ]
 
     def new
       @podcast_episode = PodcastEpisode.new

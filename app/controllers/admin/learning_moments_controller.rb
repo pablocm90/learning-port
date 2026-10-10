@@ -1,7 +1,7 @@
 module Admin
   class LearningMomentsController < ApplicationController
     before_action :authenticate_writer!
-    before_action :set_learning_moment, only: [:edit, :update, :destroy]
+    before_action :set_learning_moment, only: [ :edit, :update, :destroy ]
 
     def new
       @learning_moment = LearningMoment.new

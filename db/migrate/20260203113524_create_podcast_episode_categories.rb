@@ -7,7 +7,7 @@ class CreatePodcastEpisodeCategories < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :podcast_episode_categories, [:podcast_episode_id, :podcast_category_id],
+    add_index :podcast_episode_categories, [ :podcast_episode_id, :podcast_category_id ],
               unique: true, name: 'idx_episode_categories_unique'
   end
 end

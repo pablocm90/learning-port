@@ -17,7 +17,7 @@ RSpec.describe Category, type: :model do
       cat2 = create(:category, position: 2)
       cat1 = create(:category, position: 1)
 
-      expect(Category.ordered).to eq([cat1, cat2])
+      expect(Category.ordered).to eq([ cat1, cat2 ])
     end
   end
 

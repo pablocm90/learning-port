@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
-  devise_for :writers, skip: [:registrations]
+  devise_for :writers, skip: [ :registrations ]
 
   namespace :admin do
     get "/", to: "dashboard#index", as: :dashboard
-    resources :categories, except: [:show]
-    resources :learning_moments, except: [:index, :show]
-    resources :podcast_episodes, except: [:index, :show]
+    resources :categories, except: [ :show ]
+    resources :learning_moments, except: [ :index, :show ]
+    resources :podcast_episodes, except: [ :index, :show ]
   end
 
   root "pages#home"

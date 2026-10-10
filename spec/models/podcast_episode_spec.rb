@@ -17,7 +17,7 @@ RSpec.describe PodcastEpisode, type: :model do
       old = create(:podcast_episode, published_at: 1.week.ago)
       new_ep = create(:podcast_episode, published_at: 1.day.ago)
 
-      expect(PodcastEpisode.newest_first).to eq([new_ep, old])
+      expect(PodcastEpisode.newest_first).to eq([ new_ep, old ])
     end
   end
 end

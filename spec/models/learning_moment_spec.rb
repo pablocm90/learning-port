@@ -42,7 +42,7 @@ RSpec.describe LearningMoment, type: :model do
       new_moment = create(:learning_moment, occurred_at: 1.day.ago)
       old_moment = create(:learning_moment, occurred_at: 1.year.ago)
 
-      expect(LearningMoment.chronological).to eq([old_moment, new_moment])
+      expect(LearningMoment.chronological).to eq([ old_moment, new_moment ])
     end
   end
 end
