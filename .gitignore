@@ -38,3 +38,6 @@
 
 # Node modules (for Tailwind plugins)
 /node_modules
+
+/.claude/
+/docs/plans/
