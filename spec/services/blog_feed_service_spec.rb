@@ -44,12 +44,17 @@ RSpec.describe BlogFeedService do
       )
     end
 
-    it "returns nil when the feed is unreachable" do
-      stub_request(:get, "https://feed.test/rss.xml").to_timeout
+    {
+      "is unreachable" => ->(stub) { stub.to_timeout },
+      "serves an error page" => ->(stub) { stub.to_return(status: 503, body: "<html><body>Service Unavailable</body></html>") }
+    }.each do |reason, respond|
+      it "returns nil when the feed #{reason}" do
+        respond.call(stub_request(:get, "https://feed.test/rss.xml"))
 
-      result = with_feed_url("https://feed.test/rss.xml") { BlogFeedService.fetch_latest }
+        result = with_feed_url("https://feed.test/rss.xml") { BlogFeedService.fetch_latest }
 
-      expect(result).to be_nil
+        expect(result).to be_nil
+      end
     end
 
     it "returns nil when the feed has no posts" do
