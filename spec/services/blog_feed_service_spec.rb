@@ -1,71 +1,61 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe BlogFeedService do
-  describe '.fetch_latest' do
-    let(:http_double) { instance_double(Net::HTTP) }
-
-    before do
-      allow(Net::HTTP).to receive(:new).and_return(http_double)
-      allow(http_double).to receive(:use_ssl=)
-      allow(http_double).to receive(:read_timeout=)
-      Rails.cache.clear
+  describe ".fetch_latest" do
+    def with_feed_url(url)
+      original = ENV["BLOG_RSS_URL"]
+      ENV["BLOG_RSS_URL"] = url
+      yield
+    ensure
+      ENV["BLOG_RSS_URL"] = original
     end
 
-    it 'returns nil when API request fails' do
-      allow(http_double).to receive(:request).and_raise(StandardError.new('Connection failed'))
+    def rss(items)
+      <<~XML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <rss version="2.0"><channel>#{items.join}</channel></rss>
+      XML
+    end
 
-      result = BlogFeedService.fetch_latest
+    def item(title:, slug:, published:)
+      <<~XML
+        <item>
+          <title><![CDATA[#{title}]]></title>
+          <description><![CDATA[About #{title}]]></description>
+          <link>https://blog.example.com/#{slug}</link>
+          <pubDate>#{published}</pubDate>
+        </item>
+      XML
+    end
+
+    it "returns the newest post in the RSS feed" do
+      stub_request(:get, "https://feed.test/rss.xml").to_return(body: rss([
+        item(title: "The wrong unit", slug: "wrong-unit", published: "Wed, 19 Aug 2026 16:11:12 GMT"),
+        item(title: "Rant code", slug: "rant-code", published: "Fri, 17 Apr 2026 10:14:46 GMT")
+      ]))
+
+      result = with_feed_url("https://feed.test/rss.xml") { BlogFeedService.fetch_latest }
+
+      expect(result).to eq(
+        title: "The wrong unit",
+        url: "https://blog.example.com/wrong-unit",
+        description: "About The wrong unit",
+        published_at: Time.utc(2026, 8, 19, 16, 11, 12)
+      )
+    end
+
+    it "returns nil when the feed is unreachable" do
+      stub_request(:get, "https://feed.test/rss.xml").to_timeout
+
+      result = with_feed_url("https://feed.test/rss.xml") { BlogFeedService.fetch_latest }
 
       expect(result).to be_nil
     end
 
-    it 'parses Hashnode GraphQL response and returns latest post' do
-      api_response = {
-        data: {
-          publication: {
-            posts: {
-              edges: [
-                {
-                  node: {
-                    title: 'Test Post',
-                    url: 'https://blog.example.com/test',
-                    brief: 'This is a test post',
-                    publishedAt: '2024-01-01T00:00:00.000Z'
-                  }
-                }
-              ]
-            }
-          }
-        }
-      }.to_json
+    it "returns nil when the feed has no posts" do
+      stub_request(:get, "https://feed.test/rss.xml").to_return(body: rss([]))
 
-      success_response = Net::HTTPOK.new('1.1', '200', 'OK')
-      allow(success_response).to receive(:body).and_return(api_response)
-      allow(http_double).to receive(:request).and_return(success_response)
-
-      result = BlogFeedService.fetch_latest
-
-      expect(result[:title]).to eq('Test Post')
-      expect(result[:url]).to eq('https://blog.example.com/test')
-      expect(result[:description]).to eq('This is a test post')
-    end
-
-    it 'returns nil when publication has no posts' do
-      api_response = {
-        data: {
-          publication: {
-            posts: {
-              edges: []
-            }
-          }
-        }
-      }.to_json
-
-      success_response = Net::HTTPOK.new('1.1', '200', 'OK')
-      allow(success_response).to receive(:body).and_return(api_response)
-      allow(http_double).to receive(:request).and_return(success_response)
-
-      result = BlogFeedService.fetch_latest
+      result = with_feed_url("https://feed.test/rss.xml") { BlogFeedService.fetch_latest }
 
       expect(result).to be_nil
     end
